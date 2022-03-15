@@ -31,11 +31,18 @@ class RatingRoutes {
     }
 
 
-    public async addRating(req: Request, res: Response) : Promise<void> {
+    public async addRatingUser(req: Request, res: Response) : Promise<void> {
         console.log(req.body);
-        const {rater, rated, rating, description} = req.body;
-        const newRating = new Rating({rater, rated, rating, description});
+        const {rater, userRated, rating, description} = req.body;
+
+        const user = await User.findById(userRated._id);
+
+        const newRating = new Rating({rater, userRated, rating, description});
         const savedRating = await newRating.save();
+
+        user.ratings = user.ratings.concat(savedRating._id);
+        user.save();
+
         res.status(200).send('Rating added!');
     }
 
@@ -62,7 +69,7 @@ class RatingRoutes {
     routes() {
         this.router.get('/', this.getRatings);
         this.router.get('/:nameRating', this.getRatingsByName);
-        this.router.post('/', this.addRating);
+        this.router.post('/', this.addRatingUser);
         this.router.put('/:nameRating', this.updateRating);
         this.router.delete('/:nameRating', this.deleteRating);
     }

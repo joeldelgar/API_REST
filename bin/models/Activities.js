@@ -7,6 +7,6 @@ const ActivitySchema = new mongoose_1.Schema({
     users: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User' }],
     language: { type: String, unique: true },
     location: [{ type: String, unique: true }],
-    ratings: [{ type: mongoose_1.Schema.Types.ObjectId, cref: 'Rating' }]
+    ratings: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Rating' }]
 });
 exports.default = (0, mongoose_1.model)('Activity', ActivitySchema);

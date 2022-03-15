@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const Rating_1 = __importDefault(require("../models/Rating"));
+const User_1 = __importDefault(require("../models/User"));
 class RatingRoutes {
     constructor() {
         this.router = (0, express_1.Router)();
@@ -28,11 +29,14 @@ class RatingRoutes {
             res.status(200).send(ratingFound);
         }
     }
-    async addRating(req, res) {
+    async addRatingUser(req, res) {
         console.log(req.body);
-        const { rater, rated, rating, description } = req.body;
-        const newRating = new Rating_1.default({ rater, rated, rating, description });
+        const { rater, userRated, rating, description } = req.body;
+        const user = await User_1.default.findById(userRated._id);
+        const newRating = new Rating_1.default({ rater, userRated, rating, description });
         const savedRating = await newRating.save();
+        user.ratings = user.ratings.concat(savedRating._id);
+        user.save();
         res.status(200).send('Rating added!');
     }
     async updateRating(req, res) {
@@ -56,7 +60,7 @@ class RatingRoutes {
     routes() {
         this.router.get('/', this.getRatings);
         this.router.get('/:nameRating', this.getRatingsByName);
-        this.router.post('/', this.addRating);
+        this.router.post('/', this.addRatingUser);
         this.router.put('/:nameRating', this.updateRating);
         this.router.delete('/:nameRating', this.deleteRating);
     }

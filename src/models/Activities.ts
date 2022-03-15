@@ -7,7 +7,7 @@ const ActivitySchema = new Schema({
     users: [{type: Schema.Types.ObjectId, ref: 'User'}],
     language: {type: String, unique:true},
     location: [{type: String, unique:true}],
-    ratings: [{type: Schema.Types.ObjectId,cref: 'Rating'}]
+    ratings: [{type: Schema.Types.ObjectId, ref: 'Rating'}]
 })
 
 export default model('Activity', ActivitySchema);
