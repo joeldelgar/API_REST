@@ -33,6 +33,7 @@ class RatingRoutes {
 
     public async addRatingUser(req: Request, res: Response) : Promise<void> {
         console.log(req.body);
+        console.log("xxxxx");
         const {rater, userRated, rating, description} = req.body;
 
         const user = await User.findById(userRated._id);
