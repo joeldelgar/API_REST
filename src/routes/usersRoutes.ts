@@ -10,7 +10,7 @@ class UserRoutes {
     }
 
     public async getUsers(req: Request, res: Response) : Promise<void> { //It returns a void, but internally it's a promise.
-        const allUsers = await User.find();
+        const allUsers = await User.find().populate('personalRatings', 'rater rating -_id description').populate('activityRatings', 'rater rating -_id description');
         if (allUsers.length == 0){
             res.status(404).send("There are no users yet!")
         }

@@ -11,7 +11,7 @@ class RatingRoutes {
     }
 
     public async getRatings(req: Request, res: Response) : Promise<void> { //It returns a void, but internally it's a promise.
-        const allRatings = await Rating.find().populate('rater', 'name').populate('rated', 'name username');
+        const allRatings = await Rating.find().populate('rater', 'name').populate('userRated', 'name username');
         if (allRatings.length == 0){
             res.status(404).send("There are no ratings yet!")
         }
@@ -32,17 +32,16 @@ class RatingRoutes {
 
 
     public async addRatingUser(req: Request, res: Response) : Promise<void> {
-        console.log(req.body);
-        console.log("xxxxx");
+        //console.log(req.body);
         const {rater, userRated, rating, description} = req.body;
-
-        const user = await User.findById(userRated._id);
+        const user = await User.findById(userRated);
 
         const newRating = new Rating({rater, userRated, rating, description});
         const savedRating = await newRating.save();
 
-        user.ratings = user.ratings.concat(savedRating._id);
-        user.save();
+        user.personalRatings.push(newRating._id);
+
+        const userToUpdate = await User.findOneAndUpdate({ _id : userRated }, { personalRatings: user.personalRatings});
 
         res.status(200).send('Rating added!');
     }
@@ -58,7 +57,7 @@ class RatingRoutes {
     }
 
     public async deleteRating(req: Request, res: Response) : Promise<void> {
-        const ratingToDelete = await Rating.findOneAndDelete ({name:req.params.nameRating}, req.body);
+        const ratingToDelete = await Rating.findOneAndDelete ({name:req.params._id}, req.body);
         if (ratingToDelete == null){
             res.status(404).send("This rating doesn't exist!")
         }
@@ -70,7 +69,7 @@ class RatingRoutes {
     routes() {
         this.router.get('/', this.getRatings);
         this.router.get('/:nameRating', this.getRatingsByName);
-        this.router.post('/', this.addRatingUser);
+        this.router.post('/ratinguser', this.addRatingUser);
         this.router.put('/:nameRating', this.updateRating);
         this.router.delete('/:nameRating', this.deleteRating);
     }
