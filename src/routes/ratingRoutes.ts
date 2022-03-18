@@ -1,4 +1,5 @@
 import {Request, response, Response, Router} from 'express';
+import Activities from '../models/Activities';
 
 import Rating from '../models/Rating';
 import User from '../models/User';
@@ -46,6 +47,22 @@ class RatingRoutes {
         res.status(200).send('Rating added!');
     }
 
+    public async addRatingActivity(req: Request, res: Response) : Promise<void> {
+        //console.log(req.body);
+        const {rater, activityRated, rating, description} = req.body;
+        const activity = await Activities.findById(activityRated);
+        console.log(activity);
+
+        const newRating = new Rating({rater, activityRated, rating, description});
+        const savedRating = await newRating.save();
+
+        activity.ratings.push(newRating._id);
+
+        const activityToUpdate = await Activities.findOneAndUpdate({ _id : activityRated }, { ratings: activity.ratings});
+
+        res.status(200).send('Rating added!');
+    }
+
     public async updateRating(req: Request, res: Response) : Promise<void> {
         const ratingToUpdate = await Rating.findOneAndUpdate ({name: req.params.nameRating}, req.body);
         if(ratingToUpdate == null){
@@ -70,6 +87,7 @@ class RatingRoutes {
         this.router.get('/', this.getRatings);
         this.router.get('/:nameRating', this.getRatingsByName);
         this.router.post('/ratinguser', this.addRatingUser);
+        this.router.post('/ratingactivity', this.addRatingActivity);
         this.router.put('/:nameRating', this.updateRating);
         this.router.delete('/:nameRating', this.deleteRating);
     }
