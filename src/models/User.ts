@@ -15,6 +15,7 @@ const UserSchema = new Schema({
     personalRatings: [{type: Schema.Types.ObjectId, ref:'Rating'}],
     activityRatings: [{type: Schema.Types.ObjectId, ref:'Rating'}],
     activities: [{type: Schema.Types.ObjectId, ref:'Activities'}],
+    messages:[{type: Schema.Types.ObjectId, ref:'Message'}],
     creationDate: {type: Date, default:Date.now},
 });
 

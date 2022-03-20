@@ -1,5 +1,4 @@
 import {Schema, model} from 'mongoose';
-import User from '../models/User';
 
 const ActivitySchema = new Schema({
     name: {type:String, unique:true},
@@ -7,7 +6,8 @@ const ActivitySchema = new Schema({
     users: [{type: Schema.Types.ObjectId, ref: 'User'}],
     language: {type: String, unique:true},
     location: [{type: String, unique:true}],
-    ratings: [{type: Schema.Types.ObjectId,cref: 'Rating'}]
+    ratings: [{type: Schema.Types.ObjectId,cref: 'Rating'}],
+    messages: [{type: Schema.Types.ObjectId,cref: 'Message'}]
 })
 
 export default model('Activity', ActivitySchema);

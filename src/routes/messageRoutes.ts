@@ -81,6 +81,12 @@ class MessageRoutes {
         const newMessage = new Message({message, sender, receiver, activity});
         const savedMessage = await newMessage.save();
     
+        newSender.messages.push(newMessage._id);
+        const senderUpdate = await User.findOneAndUpdate({ _id : newSender }, { messages: newSender.messages});
+        
+        newReceiver.messages.push(newMessage._id);
+        const receiverUpdate = await User.findOneAndUpdate({ _id : newReceiver }, { messages: newReceiver.messages});
+
         res.status(200).send('Message added!');    
     }
 
@@ -104,6 +110,12 @@ class MessageRoutes {
         const newMessage = new Message({message, sender, receiver});
         const savedMessage = await newMessage.save();
     
+        newSender.messages.push(newMessage._id);
+        const senderUpdate = await User.findOneAndUpdate({ _id : newSender }, { messages: newSender.messages});
+        
+        newActivity.messages.push(newMessage._id);
+        const messageUpdate = await Activity.findOneAndUpdate({ _id : newActivity }, { messages: newActivity.messages});
+
         res.status(200).send('Message added!');    
     }
     
