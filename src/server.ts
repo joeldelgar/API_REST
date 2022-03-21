@@ -46,7 +46,6 @@ class Server {
         this.app.use('/api/activities', activityRoutes);
         this.app.use('/api/messages', messageRoutes);
 
-
     }
 
     start() {
