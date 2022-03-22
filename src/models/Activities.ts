@@ -3,7 +3,7 @@ import {Schema, model} from 'mongoose';
 const ActivitySchema = new Schema({
     name: {type:String, unique:true},
     description: {type:String},
-    organizer: [{type: Schema.Types.ObjectId, required:true, ref: 'User'}],
+    organizer: {type: Schema.Types.ObjectId, required:true, ref: 'User'},
     users: [{type: Schema.Types.ObjectId, ref: 'User'}],
     language: {type: String, unique:true},
     location: [{type: String, unique:true}],
