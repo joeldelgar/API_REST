@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,node,angular,ionic3,react,reactnative,vue,vuejs,flutter
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,visualstudiocode,node,angular,ionic3,react,reactnative,vue,vuejs,flutter
 
+# Project related
+Insomnia.json
+
 # Executables
 *.bin
 bin/
