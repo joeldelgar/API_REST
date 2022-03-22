@@ -1,6 +1,6 @@
 import {Schema, model} from 'mongoose';
 import Rating from './Rating';
-import Activity from './Activities';
+import Activities from './Activities';
 
 const UserSchema = new Schema({
     name: {type: String, required:true},
@@ -13,7 +13,7 @@ const UserSchema = new Schema({
     location: [{type: String}],
     photo: {type: String},
     personalRatings: [{type: Schema.Types.ObjectId, ref:'Rating'}],
-    activityRatings: [{type: Schema.Types.ObjectId, ref:'Rating'}],
+    activitiesOrganized: [{type: Schema.Types.ObjectId, ref:'Activities'}],
     activities: [{type: Schema.Types.ObjectId, ref:'Activities'}],
     creationDate: {type: Date, default:Date.now},
 });

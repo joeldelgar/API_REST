@@ -42,7 +42,7 @@ class Server {
         this.app.use(indexRoutes);
         this.app.use('/api/users', usersRoutes);
         this.app.use('/api/ratings',ratingRoutes);
-        this.app.use('api/activities', activityRoutes);
+        this.app.use('/api/activities', activityRoutes);
 
     }
 
