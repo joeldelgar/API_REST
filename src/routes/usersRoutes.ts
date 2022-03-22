@@ -32,8 +32,8 @@ class UserRoutes {
 
     public async addUser(req: Request, res: Response) : Promise<void> {
         console.log(req.body);
-        const {name, surname, username, password} = req.body;
-        const newUser = new User({name, surname, username, password});
+        const {name, surname, username, password, phone, mail} = req.body;
+        const newUser = new User({name, surname, username, password, phone, mail});
         await newUser.save();
         res.status(200).send('User added!');
     }
