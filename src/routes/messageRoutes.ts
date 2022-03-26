@@ -3,7 +3,6 @@ import {Request, Response, Router} from 'express';
 import Message from '../models/Message';
 import User from '../models/User';
 import Activity from '../models/Activities';
-import { runInNewContext } from 'vm';
 
 class MessageRoutes {
     public router: Router;
@@ -106,8 +105,8 @@ class MessageRoutes {
             return;
         }
     
-        const {message, sender, receiver} = req.body;
-        const newMessage = new Message({message, sender, receiver});
+        const {message, sender, activity} = req.body;
+        const newMessage = new Message({message, sender, activity});
         const savedMessage = await newMessage.save();
     
         newSender.messages.push(newMessage._id);
