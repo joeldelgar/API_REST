@@ -5,7 +5,7 @@ import Activities from './Activities';
 const UserSchema = new Schema({
     name: {type: String, required:true},
     surname: {type: String, required:true},
-    username: {type: String, required:true},
+    username: {type: String, required:true, unique: true},
     password: {type: String, required:true},
     phone: {type: String},
     mail: {type: String},

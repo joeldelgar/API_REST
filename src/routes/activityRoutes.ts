@@ -12,7 +12,7 @@ class ActivityRoutes{
     }
 
     public async getActivities(req: Request, res: Response) : Promise<void> { //It returns a void, but internally it's a promise.
-        const allActivities = await Activity.find().populate('users', 'name -_id').populate('ratings', 'rating description -_id').populate('organizer','name -_id').populate('messages');
+        const allActivities = await Activity.find().populate('users', 'name -_id').populate('ratings', 'rating description -_id').populate('organizer').populate('messages');
         if (allActivities.length == 0){
             res.status(404).send("There are no activities created!")
         }
@@ -22,7 +22,7 @@ class ActivityRoutes{
     }
 
     public async getActivityByName(req: Request, res: Response) : Promise<void> {
-        const activityFound = await Activity.findOne({name: req.params.nameActivity}).populate('users').populate('messages');
+        const activityFound = await Activity.findOne({name: req.params.nameActivity}).populate('users', 'name -_id').populate('ratings', 'rating description -_id').populate('organizer').populate('messages');
         if(activityFound == null){
             res.status(404).send("The activity doesn't exist!");
         }
@@ -45,7 +45,8 @@ class ActivityRoutes{
         res.status(200).send('Activity added!');
     }
 
-    public async updateActivity(req: Request, res: Response) : Promise<void> {
+    public async updateActivity(req: Request, res: Response) : Promise<void> {        
+        console.log(req.body);
         const activityToUpdate = await Activity.findOneAndUpdate ({name: req.params.nameActivity}, req.body);
         if(activityToUpdate == null){
             res.status(404).send("The activity doesn't exist!");

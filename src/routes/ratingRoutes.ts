@@ -22,7 +22,7 @@ class RatingRoutes {
     }
 
     public async getRatingsByName(req: Request, res: Response) : Promise<void> {
-        const ratingFound = await Rating.findOne({name: req.params.nameRating}).populate('rater', 'name').populate('rated', 'name username');
+        const ratingFound = await Rating.findOne({name: req.params.nameRating}).populate('rater', 'name').populate('userRated', 'name username');
         if(ratingFound == null){
             res.status(404).send("The rating doesn't exist!");
         }
