@@ -89,6 +89,40 @@ class MessageRoutes {
         res.status(200).send('Message added!');    
     }
 
+    public async addMessageUserByName(req: Request, res: Response) : Promise<void> {
+
+        const newSender = await User.findOne({name: req.body.sender});
+        const newReceiver = await User.findOne({name: req.body.receiver});
+        const message = req.body.message;
+        const activity = null;
+
+        if (newSender == null) {
+            res.status(404).send('Could not find sender!');
+            return;
+        }
+        if (newReceiver == null){
+            res.status(404).send('Could not find receiver!');
+            return;
+        }
+        if (req.body.sender == req.body.receiver) {
+            res.status(400).send('Could not have same sender and receiver!');
+            return;
+        }
+
+        const newMessage = new Message({message, sender: newSender._id, receiver: newReceiver._id, activity});
+
+        const savedMessage = await newMessage.save();
+
+        newSender.messages.push(newMessage._id);
+
+        const senderUpdate = await User.findOneAndUpdate({ name : req.body.sender }, { messages: newSender.messages});
+
+        newReceiver.messages.push(newMessage._id);
+
+        const receiverUpdate = await User.findOneAndUpdate({ name : req.body.receiver }, { messages: newReceiver.messages});
+
+        res.status(200).send('Message added!');   
+    }
 
     public async addMessageActivity(req: Request, res: Response) : Promise<void> {
         
@@ -117,7 +151,41 @@ class MessageRoutes {
 
         res.status(200).send('Message added!');    
     }
-    
+
+    public async addMessageActivityByName(req: Request, res: Response) : Promise<void> {
+        
+        const newSender = await User.findOne({name: req.body.sender});
+        const newActivity = await Activity.findOne({name: req.body.activity});
+        const message = req.body.message;
+        const receiver = null;
+
+        if (newSender == null) {
+            res.status(404).send('Could not find sender!');
+            return;
+        }
+        if (newActivity == null){
+            res.status(404).send('Could not find activity!');
+            return;
+        }
+        if (req.body.sender == req.body.activity) {
+            res.status(400).send('Could not have same sender and activity!');
+            return;
+        }
+
+        const newMessage = new Message({message, sender: newSender._id, receiver, activity: newActivity._id});
+
+        const savedMessage = await newMessage.save();
+
+        newSender.messages.push(newMessage._id);
+
+        const senderUpdate = await User.findOneAndUpdate({ name : req.body.sender }, { messages: newSender.messages});
+
+        newActivity.messages.push(newMessage._id);
+
+        const receiverUpdate = await User.findOneAndUpdate({ name : req.body.activity }, { messages: newActivity.messages});
+
+        res.status(200).send('Message added!');    
+    }
 
     public async deleteMessage(req: Request, res: Response) : Promise<void> {
         const messageToDelete = await Message.findByIdAndRemove(req.params.messageId);
@@ -139,7 +207,9 @@ class MessageRoutes {
         this.router.get('/receiver/:Id', this.getMessagesByReceiver);
         this.router.get('/activity/:Id', this.getMessagesByActivity);
         this.router.post('/user', this.addMessageUser);
+        this.router.post('/userName', this.addMessageUserByName);
         this.router.post('/activity', this.addMessageActivity);
+        this.router.post('/activityName', this.addMessageActivityByName);
         this.router.delete('/:messageId', this.deleteMessage);
     }
 }
