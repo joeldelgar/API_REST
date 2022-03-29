@@ -1,6 +1,5 @@
 import {Request, response, Response, Router} from 'express';
-import Activities from '../models/Activities';
-
+import Activity from '../models/Activities';
 import Rating from '../models/Rating';
 import User from '../models/User';
 
@@ -12,7 +11,7 @@ class RatingRoutes {
     }
 
     public async getRatings(req: Request, res: Response) : Promise<void> { //It returns a void, but internally it's a promise.
-        const allRatings = await Rating.find().populate('rater', 'name').populate('userRated', 'name username');
+        const allRatings = await Rating.find().populate('rater', 'name').populate('userRated', 'name username').populate('activityRated', 'name');
         if (allRatings.length == 0){
             res.status(404).send("There are no ratings yet!")
         }
@@ -22,7 +21,7 @@ class RatingRoutes {
     }
 
     public async getRatingsByName(req: Request, res: Response) : Promise<void> {
-        const ratingFound = await Rating.findOne({name: req.params.nameRating}).populate('rater', 'name').populate('userRated', 'name username');
+        const ratingFound = await Rating.findOne({name: req.params.nameRating}).populate('rater', 'name').populate('userRated', 'name username').populate('activityRated', 'name');
         if(ratingFound == null){
             res.status(404).send("The rating doesn't exist!");
         }
@@ -33,11 +32,10 @@ class RatingRoutes {
 
 
     public async addRatingUser(req: Request, res: Response) : Promise<void> {
-        //console.log(req.body);
-        const {rater, userRated, rating, description} = req.body;
+        const {tittle, rater, userRated, rating, description} = req.body;
         const user = await User.findById(userRated);
 
-        const newRating = new Rating({rater, userRated, rating, description});
+        const newRating = new Rating({tittle, rater, userRated, rating, description});
         const savedRating = await newRating.save();
 
         user.personalRatings.push(newRating._id);
@@ -48,17 +46,16 @@ class RatingRoutes {
     }
 
     public async addRatingActivity(req: Request, res: Response) : Promise<void> {
-        //console.log(req.body);
-        const {rater, activityRated, rating, description} = req.body;
-        const activity = await Activities.findById(activityRated);
+        const {tittle, rater, activityRated, rating, description} = req.body;
+        const activity = await Activity.findById(activityRated);
         console.log(activity);
 
-        const newRating = new Rating({rater, activityRated, rating, description});
+        const newRating = new Rating({tittle, rater, activityRated, rating, description});
         const savedRating = await newRating.save();
 
         activity.ratings.push(newRating._id);
 
-        const activityToUpdate = await Activities.findOneAndUpdate({ _id : activityRated }, { ratings: activity.ratings});
+        const activityToUpdate = await Activity.findOneAndUpdate({ _id : activityRated }, { ratings: activity.ratings});
 
         res.status(200).send('Rating added!');
     }
