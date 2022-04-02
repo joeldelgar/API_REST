@@ -1,4 +1,5 @@
 import {Request, response, Response, Router} from 'express';
+import { isOwner, verifyToken } from '../middlewares/authJWT';
 import Activities from '../models/Activities';
 
 import Activity from '../models/Activities';
@@ -86,7 +87,7 @@ class ActivityRoutes{
         this.router.post('/', this.addActivity);
         this.router.put('/:nameActivity', this.updateActivity);
         this.router.post('/adduseractivity', this.addUserActivity);
-        this.router.delete('/:nameActivity', this.deleteActivity);
+        this.router.delete('/:nameActivity', [verifyToken, isOwner], this.deleteActivity);
     }
 }
 
