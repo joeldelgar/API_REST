@@ -18,20 +18,17 @@ class AuthRoutes{
     }
 
     public async addRole(req: Request, res: Response){
-        const name = req.body.namerole;
+        const name = req.body.name;
         const newRole = new Role({name});
         await newRole.save();
         res.status(200).send('Role added!');
-
     }
 
     public async login(req: Request, res: Response) {
-        const name = req.body.name;
-        const password = req.body.password;
+        const {username, password} = req.body;
         console.log(password);
-        const userFound = await User.findOne({name: name});
+        const userFound = await User.findOne({username: username});
         if(!userFound) return res.status(400).json({message: "User not found"});
-        console.log(userFound);
 
         const matchPassword = await bcrypt.compare(password, userFound.password);
         if(!matchPassword) return res.status(401).json({token: null, message: "Invalid password"});
@@ -44,10 +41,6 @@ class AuthRoutes{
         console.log(token);
     }
    
-    public async comparePassword(password: any, recievedPassword: any){
-        return await bcrypt.compare(password, recievedPassword); //returns true if passwords coincide
-    }
-
     routes() {
         this.router.post('/login', this.login);
         this.router.post('/role', this.addRole);

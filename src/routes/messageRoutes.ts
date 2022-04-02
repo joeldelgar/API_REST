@@ -1,4 +1,5 @@
 import {Request, Response, Router} from 'express';
+import { isOwner, verifyToken } from '../middlewares/authJWT';
 
 import Message from '../models/Message';
 import User from '../models/User';
@@ -206,11 +207,11 @@ class MessageRoutes {
         this.router.get('/sender/:Id', this.getMessagesBySender);        
         this.router.get('/receiver/:Id', this.getMessagesByReceiver);
         this.router.get('/activity/:Id', this.getMessagesByActivity);
-        this.router.post('/user', this.addMessageUser);
-        this.router.post('/userName', this.addMessageUserByName);
-        this.router.post('/activity', this.addMessageActivity);
-        this.router.post('/activityName', this.addMessageActivityByName);
-        this.router.delete('/:messageId', this.deleteMessage);
+        this.router.post('/user', [verifyToken, isOwner], this.addMessageUser);
+        this.router.post('/userName', [verifyToken, isOwner], this.addMessageUserByName);
+        this.router.post('/activity', [verifyToken, isOwner], this.addMessageActivity);
+        this.router.post('/activityName', [verifyToken, isOwner], this.addMessageActivityByName);
+        this.router.delete('/:messageId', [verifyToken, isOwner], this.deleteMessage);
     }
 }
 

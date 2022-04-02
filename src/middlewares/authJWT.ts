@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from "jsonwebtoken";
+import Role from '../models/Role';
 import User from "../models/User";
 
 const _SECRET: string = 'api+jwt';
@@ -28,14 +29,11 @@ export async function isOwner (req: Request, res: Response, next: NextFunction) 
   try {
     console.log('Verifying if it is owner');
     const user = await User.findById(res.locals.jwtPayload.id);
-    console.log(user);
-
-    //const todo = await Todo.findById(todoId);
-
-    //if (!todo) return res.status(403).json({ message: "No user found" });
-
-    //if (todo.user != req.userId) return res.status(403).json({ message: "Not Owner" });
-
+    const role = await Role.findById(user.roles);
+    if (role.name == 'owner'){
+        console.log('The user is the owner!')
+    }
+    
     next();
 
   } catch (error) {
