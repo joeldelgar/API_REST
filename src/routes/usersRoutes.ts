@@ -12,18 +12,19 @@ class UserRoutes {
 
     public async getUsers(req: Request, res: Response) : Promise<void> { //It returns a void, but internally it's a promise.
         const allUsers = await User.find().populate('personalRatings', 'rating -_id description').populate('messages');
-        if (allUsers.length == 0){
+        const activeUsers = allUsers.filter(user => user.active == true);
+        if (activeUsers.length == 0){
             
             res.status(404).send("There are no users yet!")
         }
         else{
-            res.status(200).send(allUsers);
+            res.status(200).send(activeUsers);
         }
     }
 
     public async getUserByName(req: Request, res: Response) : Promise<void> {
         const userFound = await User.findOne({name: req.params.nameUser}).populate('messages');
-        if(userFound == null){
+        if(userFound == null || userFound.active == false){
             res.status(404).send("The user doesn't exist!");
         }
         else{
@@ -33,8 +34,8 @@ class UserRoutes {
 
     public async addUser(req: Request, res: Response) : Promise<void> {
         console.log(req.body);
-        const {name, surname, username, password, phone, mail, languages, location, photo, active} = req.body;
-        const newUser = new User({name, surname, username, password, phone, mail, languages, location, photo, active});
+        const {name, surname, username, password, phone, mail, languages, location, photo} = req.body;
+        const newUser = new User({name, surname, username, password, phone, mail, languages, location, photo, active: true});
         await newUser.save();
         res.status(200).send('User added!');
     }
@@ -60,13 +61,12 @@ class UserRoutes {
     } 
 
     public async disableUser(req: Request, res: Response) : Promise<void> {
-        const userToDisable = await User.findOne({name:req.params.nameUser});
+        const userToDisable = await User.findOneAndUpdate({name:req.params.nameUser},{active: false});
         if(userToDisable == null){
             res.status(404).send("The user doesn't exist")
         }
         else{
-            userToDisable.active = false;
-            res.status(200).send('Disabled');
+            res.status(200).send('User disabled');
         }        
 
     }
@@ -77,6 +77,7 @@ class UserRoutes {
         this.router.post('/', this.addUser);
         this.router.put('/:nameUser', this.updateUser);
         this.router.delete('/:nameUser', this.disableUser);
+        this.router.delete('/forget/:nameUser',this.deleteUser);
     }
 }
 const userRoutes = new UserRoutes();
