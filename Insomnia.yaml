@@ -1,11 +1,111 @@
 _type: export
 __export_format: 4
-__export_date: 2022-03-22T21:05:29.611Z
-__export_source: insomnia.desktop.app:v2022.2.0
+__export_date: 2022-04-03T17:09:41.703Z
+__export_source: insomnia.desktop.app:v2022.2.1
 resources:
+  - _id: req_d547a3d2212f406a85a6415db411f7cf
+    parentId: wrk_b18497235b484bf6a5244309ef1a9254
+    modified: 1648934425139
+    created: 1648928900972
+    url: localhost:3000/api/auth/login
+    name: Login
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        		"name": "",
+        		"email": "",
+        		"password": "123456",
+        		"username": "Lamife"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_49b69341e4584483a122a67d430b0f9d
+    authentication: {}
+    metaSortKey: -1648928900972
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: wrk_b18497235b484bf6a5244309ef1a9254
+    parentId: null
+    modified: 1647708807882
+    created: 1647708807882
+    name: API Rest - G1
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_2b5e38ddd4d84153a0947c2840a19f4e
+    parentId: fld_94e82ac299c34627918beddb5ef2ecb9
+    modified: 1648928758817
+    created: 1648928756683
+    url: ""
+    name: Get Roles
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1648928613196
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_94e82ac299c34627918beddb5ef2ecb9
+    parentId: wrk_b18497235b484bf6a5244309ef1a9254
+    modified: 1648928599780
+    created: 1648928599780
+    name: Role
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1648928599780
+    _type: request_group
+  - _id: req_8526b3719b6c475dbd589405c07d37aa
+    parentId: fld_94e82ac299c34627918beddb5ef2ecb9
+    modified: 1648934224886
+    created: 1648928613146
+    url: localhost:3000/api/auth/role
+    name: Add Role
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"name": "owner"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_72098b7a018d4c6cae4ba639e139e5c8
+    authentication: {}
+    metaSortKey: -1648928613146
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_cf85b662696f4f53b32a095afc0f0fb7
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1647947809428
+    modified: 1648934531414
     created: 1647708807907
     url: http://localhost:3000/api/users
     name: Add User
@@ -15,10 +115,11 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"name": "YourName2",
-        	"surname": "YourSurname2",
-        	"username": "YourUserName2",
-        	"password": "YourPassword2"
+        	"name": "Jordi",
+        	"surname": "Llaveria Nuñez",
+        	"username": "Jllaveria",
+        	"password": "1234",
+        	"role" : "owner"
         }
     parameters: []
     headers:
@@ -45,14 +146,6 @@ resources:
     environmentPropertyOrder: null
     metaSortKey: -1647709856242
     _type: request_group
-  - _id: wrk_b18497235b484bf6a5244309ef1a9254
-    parentId: null
-    modified: 1647708807882
-    created: 1647708807882
-    name: API Rest - G1
-    description: ""
-    scope: collection
-    _type: workspace
   - _id: req_dbdcf9a60c144485922c1ccd1e98a247
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
     modified: 1647709903577
@@ -97,9 +190,9 @@ resources:
     _type: request
   - _id: req_fc7c897132fb403b9cb0f513485af8e0
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1647947515346
+    modified: 1648934282622
     created: 1647708807910
-    url: http://localhost:3000/api/users/YourName
+    url: http://localhost:3000/api/users/Miguel
     name: Update User
     description: ""
     method: PUT
@@ -107,13 +200,17 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"password": "YourPasswordModified"
+        	"username": "Lamife"
         }
     parameters: []
     headers:
       - name: Content-Type
         value: application/json
         id: pair_644490cfbef745539498fb4c19b47c1d
+      - id: pair_b2d5f80abb68412093fc51eb05ef5bdc
+        name: x-access-token
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNDhhYjAxY2RhOGM5ZjllNDU3ZjEyMCIsImlhdCI6MTY0ODkzMjkzMywiZXhwIjoxNjQ4OTM2NTMzfQ.zApoSXlwvC8gKCxctipWyXZlp-MwAl38JYHWPXnD9dU
+        description: ""
     authentication: {}
     metaSortKey: -1646742899327.75
     isPrivate: false
@@ -126,15 +223,19 @@ resources:
     _type: request
   - _id: req_3ac13fa82d99456fb40accc858d9c705
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1647709958051
+    modified: 1648934405494
     created: 1647708807913
-    url: http://localhost:3000/api/users/Arnau
+    url: http://localhost:3000/api/users/Jordi
     name: Delete User
     description: ""
     method: DELETE
     body: {}
     parameters: []
-    headers: []
+    headers:
+      - id: pair_4d9d8ed6525645689f88598e893de9c7
+        name: x-access-token
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNDhhYTg2NzVlMmVhOWYyOWYwZTkyYSIsImlhdCI6MTY0ODkyOTQ4MywiZXhwIjoxNjQ4OTMzMDgzfQ.t6NQvENyTajyilbZ94QA9emT0VILk9eZKURETm8WzpM
+        description: ""
     authentication: {}
     metaSortKey: -1646742899277.75
     isPrivate: false
@@ -147,7 +248,7 @@ resources:
     _type: request
   - _id: req_42d050aa29fe4944ba82e54ddcf68fae
     parentId: fld_ee41acdda325479e9d0f3200e0a656b0
-    modified: 1647947763250
+    modified: 1648934325391
     created: 1647708807943
     url: http://localhost:3000/api/activities
     name: Add Activity
@@ -157,17 +258,21 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	 "name": "",
-           "description": "",
-        	 "organizer": "62389efc234b8d4369a8b2c1",
-           "language": "",
-        	 "location": ["",""]
+        	 "name": "Activity12354",
+           "description": "Best Activity",
+        	 "organizer": "6248a183540c0723510656c4",
+           "language": "Italian",
+        	 "location": ["133125135","125363421563"]
         }
     parameters: []
     headers:
       - name: Content-Type
         value: application/json
         id: pair_c5019c5486f945b7a11e9381c18c2163
+      - id: pair_80f642da4b694a88b29e73e457548e18
+        name: x-access-token
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNDhhYjAxY2RhOGM5ZjllNDU3ZjEyMCIsImlhdCI6MTY0ODkzNDI5MSwiZXhwIjoxNjQ4OTM3ODkxfQ.7mZp5cZzxzu95DGjfytfmH8T3q03iUfnb4h1CdHTP7M
+        description: ""
     authentication: {}
     metaSortKey: -1647345079043
     isPrivate: false
@@ -190,7 +295,7 @@ resources:
     _type: request_group
   - _id: req_253d1603d80643a899045e4c7eba995d
     parentId: fld_ee41acdda325479e9d0f3200e0a656b0
-    modified: 1647947830852
+    modified: 1647950241621
     created: 1647947743307
     url: http://localhost:3000/api/activities/adduseractivity
     name: Add User Activity
@@ -200,8 +305,8 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"idActivity" : "62389f11234b8d4369a8b2c4",
-        	"idUser" : "62389f35234b8d4369a8b2ca"
+        	"activityname" : "62389f11234b8d4369a8b2c4",
+        	"username" : "62389f35234b8d4369a8b2ca"
         }
     parameters: []
     headers:
@@ -220,7 +325,7 @@ resources:
     _type: request
   - _id: req_8a4faead500148bf9cb318e143d1f09d
     parentId: fld_ee41acdda325479e9d0f3200e0a656b0
-    modified: 1647709895848
+    modified: 1648925762520
     created: 1647708807936
     url: http://localhost:3000/api/activities
     name: Get Activities
@@ -291,9 +396,9 @@ resources:
     _type: request
   - _id: req_b363d06d482748febbb8aefdd38edf07
     parentId: fld_ee41acdda325479e9d0f3200e0a656b0
-    modified: 1647709829324
+    modified: 1648925767646
     created: 1647708807946
-    url: http://localhost:3000/api/activites/ActivityName
+    url: http://localhost:3000/api/activities/Activity1234
     name: Delete Activity
     description: ""
     method: DELETE
@@ -312,7 +417,7 @@ resources:
     _type: request
   - _id: req_83f165658bbd476fa5f508e98cc5f785
     parentId: fld_8c73ca2b5e5342c6bae248090de78c68
-    modified: 1647947827841
+    modified: 1647949155749
     created: 1647708807933
     url: http://localhost:3000/api/ratings
     name: Add Rating
@@ -354,7 +459,7 @@ resources:
     _type: request_group
   - _id: req_0dd44deea85b4746b96126f81844ab46
     parentId: fld_8c73ca2b5e5342c6bae248090de78c68
-    modified: 1647947828930
+    modified: 1647949157093
     created: 1647947554205
     url: http://localhost:3000/api/ratings/ratingactivity
     name: Add Rating Activity
@@ -386,7 +491,7 @@ resources:
     _type: request
   - _id: req_408c758038a54f49a71e7ef876841b1a
     parentId: fld_8c73ca2b5e5342c6bae248090de78c68
-    modified: 1647947624589
+    modified: 1647949158051
     created: 1647947613343
     url: http://localhost:3000/api/ratings/ratinguser
     name: Add Rating User
