@@ -85,8 +85,8 @@ class RatingRoutes {
     routes() {
         this.router.get('/', this.getRatings);
         this.router.get('/:nameRating', this.getRatingsByName);
-        this.router.post('/ratinguser', [verifyToken, isOwner], this.addRatingUser);
-        this.router.post('/ratingactivity', [verifyToken, isOwner], this.addRatingActivity);
+        this.router.post('/ratinguser', this.addRatingUser);
+        this.router.post('/ratingactivity', this.addRatingActivity);
         this.router.put('/:nameRating', [verifyToken, isOwner], this.updateRating);
         this.router.delete('/:nameRating', [verifyToken, isOwner], this.deleteRating);
     }
