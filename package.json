@@ -6,7 +6,7 @@
   "scripts": {
     "ts": "tsc -w",
     "dev": "nodemon ./bin/server.js",
-    "start": "tsc && node ./bin/server.js "
+    "start": "tsc && node ./bin/server.js"
   },
   "keywords": [],
   "author": "",

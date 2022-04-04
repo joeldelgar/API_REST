@@ -1,32 +1,29 @@
 _type: export
 __export_format: 4
-__export_date: 2022-04-03T17:09:41.703Z
+__export_date: 2022-04-04T22:42:23.176Z
 __export_source: insomnia.desktop.app:v2022.2.1
 resources:
-  - _id: req_d547a3d2212f406a85a6415db411f7cf
-    parentId: wrk_b18497235b484bf6a5244309ef1a9254
-    modified: 1648934425139
-    created: 1648928900972
-    url: localhost:3000/api/auth/login
-    name: Login
+  - _id: req_8526b3719b6c475dbd589405c07d37aa
+    parentId: fld_94e82ac299c34627918beddb5ef2ecb9
+    modified: 1649111816568
+    created: 1648928613146
+    url: http://localhost:3000/api/auth/roles
+    name: Add Role
     description: ""
     method: POST
     body:
       mimeType: application/json
       text: |-
         {
-        		"name": "",
-        		"email": "",
-        		"password": "123456",
-        		"username": "Lamife"
+        	"name": "owner"
         }
     parameters: []
     headers:
       - name: Content-Type
         value: application/json
-        id: pair_49b69341e4584483a122a67d430b0f9d
+        id: pair_72098b7a018d4c6cae4ba639e139e5c8
     authentication: {}
-    metaSortKey: -1648928900972
+    metaSortKey: -1648928613246
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -35,6 +32,16 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: fld_94e82ac299c34627918beddb5ef2ecb9
+    parentId: wrk_b18497235b484bf6a5244309ef1a9254
+    modified: 1649094942720
+    created: 1648928599780
+    name: Auth
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1648928599780
+    _type: request_group
   - _id: wrk_b18497235b484bf6a5244309ef1a9254
     parentId: null
     modified: 1647708807882
@@ -45,9 +52,9 @@ resources:
     _type: workspace
   - _id: req_2b5e38ddd4d84153a0947c2840a19f4e
     parentId: fld_94e82ac299c34627918beddb5ef2ecb9
-    modified: 1648928758817
+    modified: 1649094921344
     created: 1648928756683
-    url: ""
+    url: http://localhost:3000/api/auth/roles
     name: Get Roles
     description: ""
     method: GET
@@ -64,35 +71,26 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: fld_94e82ac299c34627918beddb5ef2ecb9
-    parentId: wrk_b18497235b484bf6a5244309ef1a9254
-    modified: 1648928599780
-    created: 1648928599780
-    name: Role
-    description: ""
-    environment: {}
-    environmentPropertyOrder: null
-    metaSortKey: -1648928599780
-    _type: request_group
-  - _id: req_8526b3719b6c475dbd589405c07d37aa
+  - _id: req_d547a3d2212f406a85a6415db411f7cf
     parentId: fld_94e82ac299c34627918beddb5ef2ecb9
-    modified: 1648934224886
-    created: 1648928613146
-    url: localhost:3000/api/auth/role
-    name: Add Role
+    modified: 1649111837933
+    created: 1648928900972
+    url: localhost:3000/api/auth/login
+    name: Login
     description: ""
     method: POST
     body:
       mimeType: application/json
       text: |-
         {
-        	"name": "owner"
+        	"username": "mupikga",
+        	"password": "1234"
         }
     parameters: []
     headers:
       - name: Content-Type
         value: application/json
-        id: pair_72098b7a018d4c6cae4ba639e139e5c8
+        id: pair_49b69341e4584483a122a67d430b0f9d
     authentication: {}
     metaSortKey: -1648928613146
     isPrivate: false
@@ -105,7 +103,7 @@ resources:
     _type: request
   - _id: req_cf85b662696f4f53b32a095afc0f0fb7
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1648934531414
+    modified: 1649111799905
     created: 1647708807907
     url: http://localhost:3000/api/users
     name: Add User
@@ -115,11 +113,15 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"name": "Jordi",
-        	"surname": "Llaveria Nuñez",
-        	"username": "Jllaveria",
-        	"password": "1234",
-        	"role" : "owner"
+          "name": "Maria",
+          "surname": "Garcia",
+          "username": "mupikga",
+          "password": "1234",
+          "phone": null,
+          "mail": null,
+          "languages": [ "cat" ],
+          "location": [ "manresa" ],
+          "photo": null
         }
     parameters: []
     headers:
@@ -169,9 +171,9 @@ resources:
     _type: request
   - _id: req_33f29f2c222b4a55ac56db8ff963a6f4
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1647709952784
+    modified: 1649110220779
     created: 1647708807904
-    url: http://localhost:3000/api/users/YourName
+    url: http://localhost:3000/api/users/Maria
     name: Get UserByName
     description: ""
     method: GET
@@ -190,9 +192,9 @@ resources:
     _type: request
   - _id: req_fc7c897132fb403b9cb0f513485af8e0
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1648934282622
+    modified: 1649111809588
     created: 1647708807910
-    url: http://localhost:3000/api/users/Miguel
+    url: http://localhost:3000/api/users/Jordi
     name: Update User
     description: ""
     method: PUT
@@ -200,7 +202,7 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"username": "Lamife"
+        	"password": "12345"
         }
     parameters: []
     headers:
@@ -209,7 +211,7 @@ resources:
         id: pair_644490cfbef745539498fb4c19b47c1d
       - id: pair_b2d5f80abb68412093fc51eb05ef5bdc
         name: x-access-token
-        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNDhhYjAxY2RhOGM5ZjllNDU3ZjEyMCIsImlhdCI6MTY0ODkzMjkzMywiZXhwIjoxNjQ4OTM2NTMzfQ.zApoSXlwvC8gKCxctipWyXZlp-MwAl38JYHWPXnD9dU
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNGE2MjBjZWEwYmFiNGJjNzE4NTIwNiIsImlhdCI6MTY0OTA0MTk0MiwiZXhwIjoxNjQ5MDQ1NTQyfQ.R798N5iN9kfa7QZdj1mYMybnhHEw3ia4-tqaoeKrnKg
         description: ""
     authentication: {}
     metaSortKey: -1646742899327.75
@@ -248,7 +250,7 @@ resources:
     _type: request
   - _id: req_42d050aa29fe4944ba82e54ddcf68fae
     parentId: fld_ee41acdda325479e9d0f3200e0a656b0
-    modified: 1648934325391
+    modified: 1649101769643
     created: 1647708807943
     url: http://localhost:3000/api/activities
     name: Add Activity
@@ -295,7 +297,7 @@ resources:
     _type: request_group
   - _id: req_253d1603d80643a899045e4c7eba995d
     parentId: fld_ee41acdda325479e9d0f3200e0a656b0
-    modified: 1647950241621
+    modified: 1649101768684
     created: 1647947743307
     url: http://localhost:3000/api/activities/adduseractivity
     name: Add User Activity
@@ -763,11 +765,11 @@ resources:
     _type: request
   - _id: env_ac7b21351f82418b84a3dbdf0eed4f8f
     parentId: wrk_b18497235b484bf6a5244309ef1a9254
-    modified: 1647708807886
+    modified: 1649111837453
     created: 1647708807886
     name: Base Environment
     data: {}
-    dataPropertyOrder: null
+    dataPropertyOrder: {}
     color: null
     isPrivate: false
     metaSortKey: 1646138231820

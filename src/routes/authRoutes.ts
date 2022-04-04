@@ -17,6 +17,16 @@ class AuthRoutes{
         this.routes();
     }
 
+    public async getRoles(req: Request, res: Response) : Promise<void> {
+        const allRoles = await Role.find();
+        if (allRoles.length == 0){
+            res.status(404).send("There are no roles yet!")
+        }
+        else{
+            res.status(200).send(allRoles);
+        }
+    }
+
     public async addRole(req: Request, res: Response){
         const name = req.body.name;
         const newRole = new Role({name});
@@ -31,19 +41,20 @@ class AuthRoutes{
         if(!userFound) return res.status(400).json({message: "User not found"});
 
         const matchPassword = await bcrypt.compare(password, userFound.password);
-        if(!matchPassword) return res.status(401).json({token: null, message: "Invalid password"});
+        if(!matchPassword) return res.status(401).json({message: "Invalid password"});
 
         const token = jwt.sign({id: userFound._id}, _SECRET, {
             expiresIn: 3600
         });
-
-        res.json({token: token});
+        
+        res.status(200).json({token: token});
         console.log(token);
     }
    
     routes() {
+        this.router.get('/roles', this.getRoles);
         this.router.post('/login', this.login);
-        this.router.post('/role', this.addRole);
+        this.router.post('/roles', this.addRole);
     }
 
 }
