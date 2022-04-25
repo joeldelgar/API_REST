@@ -34,6 +34,22 @@ class AuthRoutes{
         res.status(200).send('Role added!');
     }
 
+    public async register(req: Request, res: Response){
+        const {name, surname, username, password, phone, mail, languages, location, photo, role} = req.body;
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(password, salt);
+        const newUser = new User({name, surname, username, password: hashed, phone, mail, languages, location, photo});
+        const roleadded = await Role.findOne({role});
+        newUser.roles = roleadded._id;
+        await newUser.save();
+        
+        const userFound = await User.findOne({username: username});
+        const token = jwt.sign({id: userFound._id}, _SECRET, {
+            expiresIn: 3600
+        });
+        res.status(200).json({token: token});
+    }
+
     public async login(req: Request, res: Response) {
         const {username, password} = req.body;
         console.log(password);
