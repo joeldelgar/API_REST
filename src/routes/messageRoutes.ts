@@ -1,4 +1,5 @@
 import {Request, Response, Router} from 'express';
+import { isOwner, verifyToken } from '../middlewares/authJWT';
 
 import Message from '../models/Message';
 import User from '../models/User';
@@ -210,7 +211,7 @@ class MessageRoutes {
         this.router.post('/userName', this.addMessageUserByName);
         this.router.post('/activity', this.addMessageActivity);
         this.router.post('/activityName', this.addMessageActivityByName);
-        this.router.delete('/:messageId', this.deleteMessage);
+        this.router.delete('/:messageId', [verifyToken, isOwner], this.deleteMessage);
     }
 }
 

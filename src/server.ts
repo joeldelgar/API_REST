@@ -10,6 +10,7 @@ import usersRoutes from './routes/usersRoutes';
 import ratingRoutes from './routes/ratingRoutes';
 import activityRoutes from './routes/activityRoutes';
 import messageRoutes from './routes/messageRoutes';
+import authRoutes from './routes/authRoutes';
 
 class Server {
     public app: express.Application;
@@ -45,7 +46,7 @@ class Server {
         this.app.use('/api/ratings',ratingRoutes);
         this.app.use('/api/activities', activityRoutes);
         this.app.use('/api/messages', messageRoutes);
-
+        this.app.use('/api/auth', authRoutes)
     }
 
     start() {

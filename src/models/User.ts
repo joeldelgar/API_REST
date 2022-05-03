@@ -1,6 +1,7 @@
 import {Schema, model} from 'mongoose';
 import Rating from './Rating';
 import Activities from './Activities';
+import Role from './Role';
 
 const UserSchema = new Schema({
     name: {type: String, required:true},
@@ -17,6 +18,7 @@ const UserSchema = new Schema({
     activities: [{type: Schema.Types.ObjectId, ref:'Activities'}],
     messages:[{type: Schema.Types.ObjectId, ref:'Message'}],
     creationDate: {type: Date, default:Date.now},
+    roles: {type: Schema.Types.ObjectId, ref: 'Role'}
 });
 
 
