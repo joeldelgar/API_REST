@@ -1,11 +1,11 @@
 _type: export
 __export_format: 4
-__export_date: 2022-04-28T02:20:04.681Z
-__export_source: insomnia.desktop.app:v2022.2.1
+__export_date: 2022-05-03T16:04:00.626Z
+__export_source: insomnia.desktop.app:v2022.3.0
 resources:
   - _id: req_8526b3719b6c475dbd589405c07d37aa
     parentId: fld_94e82ac299c34627918beddb5ef2ecb9
-    modified: 1651112375600
+    modified: 1651591888266
     created: 1648928613146
     url: http://localhost:3000/api/auth/roles
     name: Add Role
@@ -73,7 +73,7 @@ resources:
     _type: request
   - _id: req_d547a3d2212f406a85a6415db411f7cf
     parentId: fld_94e82ac299c34627918beddb5ef2ecb9
-    modified: 1651112376630
+    modified: 1651591889292
     created: 1648928900972
     url: localhost:3000/api/auth/login
     name: Login
@@ -101,9 +101,46 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_7c352d89e63341dca027f351033316b6
+    parentId: fld_94e82ac299c34627918beddb5ef2ecb9
+    modified: 1651593454294
+    created: 1651591964108
+    url: localhost:3000/api/auth/register
+    name: Register
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "name": "Toni",
+          "surname": "Oller",
+          "username": "tonito",
+          "password": "1234",
+          "phone": null,
+          "mail": null,
+          "languages": [ "cat" ],
+          "location": [ "bcn" ],
+          "photo": null
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_49b69341e4584483a122a67d430b0f9d
+    authentication: {}
+    metaSortKey: -1648802831541
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_cf85b662696f4f53b32a095afc0f0fb7
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1651112355131
+    modified: 1651592889122
     created: 1647708807907
     url: http://localhost:3000/api/users
     name: Add User
@@ -150,7 +187,7 @@ resources:
     _type: request_group
   - _id: req_dbdcf9a60c144485922c1ccd1e98a247
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1647709903577
+    modified: 1651591028319
     created: 1647708807901
     url: http://localhost:3000/api/users
     name: Get Users
@@ -171,9 +208,9 @@ resources:
     _type: request
   - _id: req_33f29f2c222b4a55ac56db8ff963a6f4
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1649110220779
+    modified: 1651591043927
     created: 1647708807904
-    url: http://localhost:3000/api/users/Maria
+    url: http://localhost:3000/api/users/Manuel
     name: Get UserByName
     description: ""
     method: GET
@@ -192,7 +229,7 @@ resources:
     _type: request
   - _id: req_fc7c897132fb403b9cb0f513485af8e0
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1651112272338
+    modified: 1651591666402
     created: 1647708807910
     url: http://localhost:3000/api/users/Jordi
     name: Update User
@@ -223,11 +260,36 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_2b82df44f50d42dc8f1b8c4bb1548561
+    parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
+    modified: 1651591855781
+    created: 1651590760869
+    url: http://localhost:3000/api/users/Juanjo
+    name: Disable User
+    description: ""
+    method: DELETE
+    body: {}
+    parameters: []
+    headers:
+      - id: pair_4d9d8ed6525645689f88598e893de9c7
+        name: x-access-token
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNGI3MTZiYzEwNTc5ZWUyZTFhODhhZiIsImlhdCI6MTY1MTU5MTY1NywiZXhwIjoxNjUxNTk1MjU3fQ.ejMsMKoUg9MGvgB-vWI2R5zd_MYpRikoKZbElcjm5Ow
+        description: ""
+    authentication: {}
+    metaSortKey: -1646742899302.75
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_3ac13fa82d99456fb40accc858d9c705
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1648934405494
+    modified: 1651591748876
     created: 1647708807913
-    url: http://localhost:3000/api/users/Jordi
+    url: http://localhost:3000/api/users/forget/Manuel
     name: Delete User
     description: ""
     method: DELETE
@@ -236,7 +298,7 @@ resources:
     headers:
       - id: pair_4d9d8ed6525645689f88598e893de9c7
         name: x-access-token
-        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNDhhYTg2NzVlMmVhOWYyOWYwZTkyYSIsImlhdCI6MTY0ODkyOTQ4MywiZXhwIjoxNjQ4OTMzMDgzfQ.t6NQvENyTajyilbZ94QA9emT0VILk9eZKURETm8WzpM
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNGI3MTZiYzEwNTc5ZWUyZTFhODhhZiIsImlhdCI6MTY1MTU5MTY1NywiZXhwIjoxNjUxNTk1MjU3fQ.ejMsMKoUg9MGvgB-vWI2R5zd_MYpRikoKZbElcjm5Ow
         description: ""
     authentication: {}
     metaSortKey: -1646742899277.75

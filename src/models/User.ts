@@ -17,9 +17,9 @@ const UserSchema = new Schema({
     activitiesOrganized: [{type: Schema.Types.ObjectId, ref:'Activities'}],
     activities: [{type: Schema.Types.ObjectId, ref:'Activities'}],
     messages:[{type: Schema.Types.ObjectId, ref:'Message'}],
+    roles: {type: Schema.Types.ObjectId, ref: 'Role'},
     creationDate: {type: Date, default:Date.now},
     active: {type: Boolean, required: true}
-    roles: {type: Schema.Types.ObjectId, ref: 'Role'}
 });
 
 

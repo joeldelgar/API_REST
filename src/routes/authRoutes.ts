@@ -38,7 +38,7 @@ class AuthRoutes{
         const {name, surname, username, password, phone, mail, languages, location, photo, role} = req.body;
         const salt = await bcrypt.genSalt(10);
         const hashed = await bcrypt.hash(password, salt);
-        const newUser = new User({name, surname, username, password: hashed, phone, mail, languages, location, photo});
+        const newUser = new User({name, surname, username, password: hashed, phone, mail, languages, location, photo, active: true});
         const roleadded = await Role.findOne({role});
         newUser.roles = roleadded._id;
         await newUser.save();
@@ -69,8 +69,9 @@ class AuthRoutes{
    
     routes() {
         this.router.get('/roles', this.getRoles);
-        this.router.post('/login', this.login);
         this.router.post('/roles', this.addRole);
+        this.router.post('/login', this.login);
+        this.router.post('/register', this.register);
     }
 
 }

@@ -85,8 +85,6 @@ class UserRoutes {
         this.router.put('/:nameUser', [verifyToken, isOwner], this.updateUser);
         this.router.delete('/:nameUser', [verifyToken, isOwner], this.disableUser);
         this.router.delete('/forget/:nameUser', [verifyToken, isOwner], this.deleteUser);
-        this.router.put('/:nameUser', [verifyToken, isOwner], this.updateUser);
-        this.router.delete('/:nameUser', [verifyToken, isOwner], this.deleteUser);
     }
 }
 const userRoutes = new UserRoutes();
