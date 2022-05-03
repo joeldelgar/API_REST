@@ -16,17 +16,18 @@ class UserRoutes {
 
     public async getUsers(req: Request, res: Response) : Promise<void> { //It returns a void, but internally it's a promise.
         const allUsers = await User.find().populate('personalRatings', 'rating -_id description').populate('messages').populate('roles','-_id name');
-        if (allUsers.length == 0){
+        const activeUsers = allUsers.filter(user => user.active == true);
+        if (activeUsers.length == 0) {
             res.status(404).send("There are no users yet!")
         }
         else{
-            res.status(200).send(allUsers);
+            res.status(200).send(activeUsers);
         }
     }
 
     public async getUserByName(req: Request, res: Response) : Promise<void> {
         const userFound = await User.findOne({name: req.params.nameUser}).populate('messages');
-        if(userFound == null){
+        if(userFound == null || userFound.active == false){
             res.status(404).send("The user doesn't exist!");
         }
         else{
@@ -39,7 +40,7 @@ class UserRoutes {
         const {name, surname, username, password, phone, mail, languages, location, photo, role} = req.body;
         const salt = await bcrypt.genSalt(10);
         const hashed = await bcrypt.hash(password, salt);
-        const newUser = new User({name, surname, username, password: hashed, phone, mail, languages, location, photo});
+        const newUser = new User({name, surname, username, password: hashed, phone, mail, languages, location, photo, active: true});
         const roleadded = await Role.findOne({role});
         newUser.roles = roleadded._id;
         await newUser.save();
@@ -65,10 +66,25 @@ class UserRoutes {
             res.status(200).send('Deleted!');
         }
     } 
+
+    public async disableUser(req: Request, res: Response) : Promise<void> {
+        const userToDisable = await User.findOneAndUpdate({name:req.params.nameUser},{active: false});
+        if(userToDisable == null){
+            res.status(404).send("The user doesn't exist")
+        }
+        else{
+            res.status(200).send('User disabled');
+        }        
+
+    }
+
     routes() {
         this.router.get('/', this.getUsers);
         this.router.get('/:nameUser', this.getUserByName);
         this.router.post('/', this.addUser);
+        this.router.put('/:nameUser', [verifyToken, isOwner], this.updateUser);
+        this.router.delete('/:nameUser', [verifyToken, isOwner], this.disableUser);
+        this.router.delete('/forget/:nameUser', [verifyToken, isOwner], this.deleteUser);
         this.router.put('/:nameUser', [verifyToken, isOwner], this.updateUser);
         this.router.delete('/:nameUser', [verifyToken, isOwner], this.deleteUser);
     }

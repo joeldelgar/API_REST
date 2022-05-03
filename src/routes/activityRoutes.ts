@@ -13,18 +13,21 @@ class ActivityRoutes{
     }
 
     public async getActivities(req: Request, res: Response) : Promise<void> { //It returns a void, but internally it's a promise.
-        const allActivities = await Activity.find().populate('users', 'name -_id').populate('ratings', 'rating description -_id').populate('organizer').populate('messages');
-        if (allActivities.length == 0){
+        const allActivities = await Activity.find().populate({path: 'users', match: {active: true}, select:'name -_id'}).populate('ratings', 'rating description -_id').populate('organizer').populate('messages');
+        const activitiesOrganizerActive = allActivities.filter(activity => activity.organizer.active == true);
+
+        if (activitiesOrganizerActive.length == 0){
             res.status(404).send("There are no activities created!")
-        }
+        }        
         else{
-            res.status(200).send(allActivities);
+            
+            res.status(200).send(activitiesOrganizerActive);
         }
     }
 
     public async getActivityByName(req: Request, res: Response) : Promise<void> {
-        const activityFound = await Activity.findOne({name: req.params.nameActivity}).populate('users', 'name -_id').populate('ratings', 'rating description -_id').populate('organizer').populate('messages');
-        if(activityFound == null){
+        const activityFound = await Activity.findOne({name: req.params.nameActivity}).populate({path: 'users', match: {active: true}, select:'name -_id'}).populate('ratings', 'rating description -_id').populate('organizer').populate('messages');
+        if(activityFound == null || activityFound.organizer.active == false){
             res.status(404).send("The activity doesn't exist!");
         }
         else{
@@ -40,8 +43,13 @@ class ActivityRoutes{
 
         const user = await User.findById(organizer);
         console.log(user);
-        user.activitiesOrganized.push(newActivity);
+        if( user.active == false){
+            res.status(404).send('Organizer not found');
+        }
+        else{
+            user.activitiesOrganized.push(newActivity);
         const userToUpdate = await User.findOneAndUpdate({ name: user.name }, { activitiesOrganized: user.activitiesOrganized});
+        }        
 
         res.status(200).send('Activity added!');
     }
@@ -53,8 +61,15 @@ class ActivityRoutes{
             res.status(404).send("The activity doesn't exist!");
         }
         else{
-            res.status(200).send('Updated!');
+            const organizer = await User.findById(activityToUpdate.organizer);
+            if(organizer.active == false){
+                res.status(404).send("Organizer not found");
+            }
+            else{
+                res.status(200).send('Updated!');
+            }
         }
+        
     }
 
     public async addUserActivity(req: Request, res: Response) : Promise <void> {
@@ -62,14 +77,20 @@ class ActivityRoutes{
 
         const user = await User.findById(idUser);
         console.log(user);
-        user.activities.push(idActivity);
-        const userToUpdate = await User.findOneAndUpdate({_id : idUser}, {activities : user.activities});
+        if( user == null || user.active == false){
+            res.status(404).send("User not found");
+        }
+        else{
+            user.activities.push(idActivity);
+            const userToUpdate = await User.findOneAndUpdate({_id : idUser}, {activities : user.activities});
 
-        const activity = await Activities.findById(idActivity);
-        activity.users.push(idUser);
-        const activityToUpdate = await Activities.findOneAndUpdate({_id : idActivity}, {users : activity.users});
+            const activity = await Activities.findById(idActivity);
+            activity.users.push(idUser);
+            const activityToUpdate = await Activities.findOneAndUpdate({_id : idActivity}, {users : activity.users});
 
-        res.status(200).send('User Added to Activity');
+            res.status(200).send('User Added to Activity');
+        }
+        
     }
 
     public async deleteActivity(req: Request, res: Response) : Promise<void> {

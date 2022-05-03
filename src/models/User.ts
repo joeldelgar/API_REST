@@ -18,6 +18,7 @@ const UserSchema = new Schema({
     activities: [{type: Schema.Types.ObjectId, ref:'Activities'}],
     messages:[{type: Schema.Types.ObjectId, ref:'Message'}],
     creationDate: {type: Date, default:Date.now},
+    active: {type: Boolean, required: true}
     roles: {type: Schema.Types.ObjectId, ref: 'Role'}
 });
 
