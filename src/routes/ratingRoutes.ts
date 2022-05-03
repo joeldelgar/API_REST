@@ -1,4 +1,6 @@
 import {Request, response, Response, Router} from 'express';
+import { isOwner, verifyToken } from '../middlewares/authJWT';
+
 import Activity from '../models/Activities';
 import Rating from '../models/Rating';
 import User from '../models/User';
@@ -85,8 +87,8 @@ class RatingRoutes {
         this.router.get('/:nameRating', this.getRatingsByName);
         this.router.post('/ratinguser', this.addRatingUser);
         this.router.post('/ratingactivity', this.addRatingActivity);
-        this.router.put('/:nameRating', this.updateRating);
-        this.router.delete('/:nameRating', this.deleteRating);
+        this.router.put('/:nameRating', [verifyToken, isOwner], this.updateRating);
+        this.router.delete('/:nameRating', [verifyToken, isOwner], this.deleteRating);
     }
 }
 const ratingRoutes = new RatingRoutes();
