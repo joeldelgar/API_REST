@@ -1,11 +1,11 @@
 _type: export
 __export_format: 4
-__export_date: 2022-04-04T22:42:23.176Z
+__export_date: 2022-04-28T02:20:04.681Z
 __export_source: insomnia.desktop.app:v2022.2.1
 resources:
   - _id: req_8526b3719b6c475dbd589405c07d37aa
     parentId: fld_94e82ac299c34627918beddb5ef2ecb9
-    modified: 1649111816568
+    modified: 1651112375600
     created: 1648928613146
     url: http://localhost:3000/api/auth/roles
     name: Add Role
@@ -73,7 +73,7 @@ resources:
     _type: request
   - _id: req_d547a3d2212f406a85a6415db411f7cf
     parentId: fld_94e82ac299c34627918beddb5ef2ecb9
-    modified: 1649111837933
+    modified: 1651112376630
     created: 1648928900972
     url: localhost:3000/api/auth/login
     name: Login
@@ -103,7 +103,7 @@ resources:
     _type: request
   - _id: req_cf85b662696f4f53b32a095afc0f0fb7
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1649111799905
+    modified: 1651112355131
     created: 1647708807907
     url: http://localhost:3000/api/users
     name: Add User
@@ -192,7 +192,7 @@ resources:
     _type: request
   - _id: req_fc7c897132fb403b9cb0f513485af8e0
     parentId: fld_68cee84e15dd489e8943a061a1ac5ff6
-    modified: 1649111809588
+    modified: 1651112272338
     created: 1647708807910
     url: http://localhost:3000/api/users/Jordi
     name: Update User

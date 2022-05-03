@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,node,angular,ionic3,react,reactnative,vue,vuejs,flutter
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,visualstudiocode,node,angular,ionic3,react,reactnative,vue,vuejs,flutter
+# Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,node,angular,react,reactnative,flutter
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,visualstudiocode,node,angular,react,reactnative,flutter
 
 # Project related
 Insomnia
@@ -105,38 +105,8 @@ lib/generated_plugin_registrant.dart
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
-### Ionic3 ###
-# Log an tmp data
-*~
-*.sw[mnpcod]
-*.log
-*.tmp
-*.tmp.*
-log.txt
-
-# NPM (Node Package Manager) files
-npm-debug.log*
-temp/
-
-# Preprocessors cache files
-.sourcemaps/
-.tmp/
-hooks/
-
-# Ionic 3 plugins files
-platforms/
-plugins/
-plugins/android.json
-plugins/ios.json
-www/
-
-# Trash data
-$RECYCLE.BIN/
-.DS_Store
-Thumbs.db
-UserInterfaceState.xcuserstate
-
 ### Linux ###
+*~
 
 # temporary files which can be created if a process still has a handle open of a deleted file
 .fuse_hidden*
@@ -152,6 +122,7 @@ UserInterfaceState.xcuserstate
 
 ### macOS ###
 # General
+.DS_Store
 .AppleDouble
 .LSOverride
 
@@ -178,9 +149,15 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+### macOS Patch ###
+# iCloud generated files
+*.icloud
+
 ### Node ###
 # Logs
 logs
+*.log
+npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
@@ -334,44 +311,13 @@ sketch
 .expo
 __generated__
 
-### ReactNative.Android Stack ###
-# Gradle files
-.gradle/
+### ReactNative.Xcode Stack ###
+## User settings
+xcuserdata/
 
-# Local configuration file (sdk path, etc)
-local.properties
-
-# Log/OS Files
-
-# Android Studio generated files and folders
-captures/
-.externalNativeBuild/
-.cxx/
-*.apk
-output.json
-
-# IntelliJ
-*.iml
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
-
-# Keystore files
-*.jks
-*.keystore
-
-# Google Services (e.g. APIs or Firebase)
-google-services.json
-
-# Android Profiling
-*.hprof
-
-### ReactNative.Buck Stack ###
-buck-out/
-.buckconfig.local
-.buckd/
-.buckversion
-.fakebuckversion
+## Xcode 8 and earlier
+*.xcscmblueprint
+*.xccheckout
 
 ### ReactNative.Gradle Stack ###
 .gradle
@@ -395,6 +341,17 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+### ReactNative.macOS Stack ###
+# General
+
+# Icon must end with two \r
+
+# Thumbnails
+
+# Files that might appear in the root of a volume
+
+# Directories potentially created on remote AFP share
 
 ### ReactNative.Linux Stack ###
 
@@ -478,24 +435,44 @@ gradle-app.setting
 
 # yarn v2
 
-### ReactNative.Xcode Stack ###
-## User settings
-xcuserdata/
+### ReactNative.Buck Stack ###
+buck-out/
+.buckconfig.local
+.buckd/
+.buckversion
+.fakebuckversion
 
-## Xcode 8 and earlier
-*.xcscmblueprint
-*.xccheckout
+### ReactNative.Android Stack ###
+# Gradle files
+.gradle/
 
-### ReactNative.macOS Stack ###
-# General
+# Local configuration file (sdk path, etc)
+local.properties
 
-# Icon must end with two \r
+# Log/OS Files
 
-# Thumbnails
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+output.json
 
-# Files that might appear in the root of a volume
+# IntelliJ
+*.iml
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
 
-# Directories potentially created on remote AFP share
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof
 
 ### VisualStudioCode ###
 .vscode/*
@@ -517,25 +494,14 @@ xcuserdata/
 .ionide
 
 # Support for Project snippet scope
+.vscode/*.code-snippets
 
-### Vue ###
-# gitignore template for Vue.js projects
-#
-# Recommended template: Node.gitignore
-
-# TODO: where does this rule come from?
-docs/_book
-
-# TODO: where does this rule come from?
-test/
-
-### Vuejs ###
-# Recommended template: Node.gitignore
-
-yarn-error.log
+# Ignore code-workspaces
+*.code-workspace
 
 ### Windows ###
 # Windows thumbnail cache files
+Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
 ehthumbs_vista.db
@@ -547,6 +513,7 @@ ehthumbs_vista.db
 [Dd]esktop.ini
 
 # Recycle Bin used on file shares
+$RECYCLE.BIN/
 
 # Windows Installer files
 *.cab
@@ -558,4 +525,4 @@ ehthumbs_vista.db
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,node,angular,ionic3,react,reactnative,vue,vuejs,flutter
+# End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,node,angular,react,reactnative,flutter
