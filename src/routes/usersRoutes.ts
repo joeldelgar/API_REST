@@ -48,8 +48,11 @@ class UserRoutes {
     }
 
     public async updateUser(req: Request, res: Response) : Promise<void> {
-        const userToUpdate = await User.findOneAndUpdate({name: req.params.nameUser}, req.body);
-        if(userToUpdate == null){
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(req.body.password, salt);
+        const userToUpdate = await User.findOneAndUpdate({name: req.params.nameUser}, req.body, {password:hashed});
+        const userToUpdatePass = await User.findOneAndUpdate({name: req.params.nameUser}, {password:hashed}); //Temp fix
+        if((userToUpdate && userToUpdatePass) == null){
             res.status(404).send("The user doesn't exist!");
         }
         else{
