@@ -1,12 +1,12 @@
 {
-  "name": "fullapp",
+  "name": "ea-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "ts": "tsc -w",
     "dev": "nodemon ./bin/server.js",
-    "start": "tsc && node ./bin/server.js"
+    "start": "node ./bin/server.js"
   },
   "keywords": [],
   "author": "",

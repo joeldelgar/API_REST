@@ -1,0 +1,32 @@
+version: "2"
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    volumes:
+      - mongodbData:/data/db
+
+  backoffice:
+    image: miguelmalu/ea-backoffice:0.2
+    container_name: backoffice
+    ports:
+      - 4000:80
+
+  #   webApp:
+  #     build: #tbd
+  #     image: webApp:latest
+  #     container_name: webApp
+  #     ports:
+  #       - 4001:80
+  #     environment:
+  #       - VIRTUAL_HOST=ea1-web.mooo.com
+  #       - LETSENCRYPT_HOST=ea1-web.mooo.com
+
+  api:
+    image: miguelmalu/ea-backend:0.2
+    container_name: api
+    ports:
+      - 3000:3000
+
+volumes:
+  mongodbData:
