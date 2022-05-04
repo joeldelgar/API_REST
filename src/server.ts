@@ -24,8 +24,8 @@ class Server {
 
     config() {
         //MongoDB settings
-        const MONGO_URI = 'mongodb://localhost/tsapi';
-        mongoose.connect(MONGO_URI || process.env.MONGODB_URL)
+        let DB_URL = process.env.DB_URL || "mongodb://localhost/tsapi";
+        mongoose.connect(DB_URL)
         .then(db => console.log("DB is connected"));
 
         //Settings
