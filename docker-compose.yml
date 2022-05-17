@@ -1,5 +1,26 @@
 version: "2"
 services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /etc/nginx/certs
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/acme.sh
+    volumes_from:
+      - nginx-proxy:rw
+    environment:
+      - DEFAULT_EMAIL=miguel.mateos@estudiantat.upc.edu
+
   mongo:
     image: mongo:latest
     container_name: mongodb
@@ -7,26 +28,33 @@ services:
       - mongodbData:/data/db
 
   backoffice:
-    image: miguelmalu/ea-backoffice:0.2
+    image: miguelmalu/ea-backoffice:0.2.5
     container_name: backoffice
-    ports:
-      - 4000:80
+#    ports:
+#      - 4000:80
+    environment:
+      - VIRTUAL_HOST=ea1-backoffice.mooo.com
+      - LETSENCRYPT_HOST=ea1-backoffice.mooo.com
 
-  #   webApp:
+  #   frontend:
   #     build: #tbd
-  #     image: webApp:latest
-  #     container_name: webApp
+  #     image: miguelmalu/ea-frontend:0.3
+  #     container_name: frontend
   #     ports:
   #       - 4001:80
   #     environment:
-  #       - VIRTUAL_HOST=ea1-web.mooo.com
-  #       - LETSENCRYPT_HOST=ea1-web.mooo.com
+  #       - VIRTUAL_HOST=ea1-wefrontendb.mooo.com
+  #       - LETSENCRYPT_HOST=ea1-frontend.mooo.com
 
   api:
     image: miguelmalu/ea-backend:0.2
     container_name: api
-    ports:
-      - 3000:3000
+#    ports:
+#      - 3000:3000
+    environment:
+      - VIRTUAL_HOST=ea1-backend.mooo.com
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=ea1-backend.mooo.com
 
 volumes:
   mongodbData:
