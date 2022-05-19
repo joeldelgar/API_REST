@@ -6,6 +6,8 @@ import User from '../models/User';
 import Activity from '../models/Activities';
 import { verify } from 'crypto';
 import Role from '../models/Role';
+import mongoose from 'mongoose';
+import Message from '../models/Message';
 
 class UserRoutes {
     public router: Router;
@@ -27,6 +29,18 @@ class UserRoutes {
 
     public async getUserByName(req: Request, res: Response) : Promise<void> {
         const userFound = await User.findOne({name: req.params.nameUser}).populate('messages');
+        if(userFound == null || userFound.active == false){
+            res.status(404).send("The user doesn't exist!");
+        }
+        else{
+            res.status(200).send(userFound);
+        }
+    }
+
+    public async getUserByID(req: Request, res: Response) : Promise<void> {
+        console.log(req.params.userID);
+        const userFound = await User.findById(req.params.userID);
+        console.log(userFound);
         if(userFound == null || userFound.active == false){
             res.status(404).send("The user doesn't exist!");
         }
@@ -84,6 +98,7 @@ class UserRoutes {
     routes() {
         this.router.get('/', this.getUsers);
         this.router.get('/:nameUser', this.getUserByName);
+        this.router.get('/byID/:userID', this.getUserByID);
         this.router.post('/', this.addUser);
         this.router.put('/:nameUser', [verifyToken, isOwner], this.updateUser);
         this.router.delete('/:nameUser', [verifyToken, isOwner], this.disableUser);
