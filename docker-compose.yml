@@ -36,15 +36,15 @@ services:
       - VIRTUAL_HOST=ea1-backoffice.mooo.com
       - LETSENCRYPT_HOST=ea1-backoffice.mooo.com
 
-  #   frontend:
-  #     build: #tbd
-  #     image: miguelmalu/ea-frontend:0.3
-  #     container_name: frontend
-  #     ports:
-  #       - 4001:80
-  #     environment:
-  #       - VIRTUAL_HOST=ea1-wefrontendb.mooo.com
-  #       - LETSENCRYPT_HOST=ea1-frontend.mooo.com
+  frontend:
+#    build: #tbd
+    image: miguelmalu/ea-frontend:0.3
+    container_name: frontend
+#    ports:
+#      - 4001:80
+    environment:
+      - VIRTUAL_HOST=ea1-frontend.mooo.com
+      - LETSENCRYPT_HOST=ea1-frontend.mooo.com
 
   api:
     image: miguelmalu/ea-backend:0.2

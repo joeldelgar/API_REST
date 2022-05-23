@@ -38,9 +38,7 @@ class UserRoutes {
     }
 
     public async getUserByID(req: Request, res: Response) : Promise<void> {
-        console.log(req.params.userID);
         const userFound = await User.findById(req.params.userID);
-        console.log(userFound);
         if(userFound == null || userFound.active == false){
             res.status(404).send("The user doesn't exist!");
         }
