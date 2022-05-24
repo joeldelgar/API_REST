@@ -1,9 +1,9 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose'
 
-export const ROLES = ['owner'];
+export const ROLES = ['owner']
 
 const RoleSchema = new Schema({
-    name: {type: String, required: true}
-});
+  name: { type: String, required: true }
+})
 
-export default model('Role', RoleSchema);
+export default model('Role', RoleSchema)
