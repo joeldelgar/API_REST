@@ -4,6 +4,7 @@ import helmet from 'helmet'
 import mongoose from 'mongoose'
 import compression from 'compression'
 import cors from 'cors'
+import Server from 'socket.io'
 
 import indexRoutes from './routes/indexRoutes'
 import usersRoutes from './routes/usersRoutes'
@@ -12,7 +13,7 @@ import activityRoutes from './routes/activityRoutes'
 import messageRoutes from './routes/messageRoutes'
 import authRoutes from './routes/authRoutes'
 
-class Server {
+class Service {
   public app: express.Application
 
   // The contructor will be the first code that is executed when an instance of the class is declared.
@@ -50,11 +51,34 @@ class Server {
   }
 
   start () {
-    this.app.listen(this.app.get('port'), () => {
+    const httpServer = this.app.listen(this.app.get('port'), () => {
       console.log('Server listening on port', this.app.get('port'))
+    })
+
+    const io = new Server(httpServer)
+
+    io.on('connection', function (client: any) {
+      console.log('Connected...', client.id)
+
+      // listens for new messages coming in
+      client.on('message', function name (data: any) {
+        console.log(data)
+        io.emit('message', data)
+      })
+
+      // listens when a user is disconnected from the server
+      client.on('disconnect', function () {
+        console.log('Disconnected...', client.id)
+      })
+
+      // listens when there's an error detected and logs the error on the console
+      client.on('error', function (err: any) {
+        console.log('Error detected', client.id)
+        console.log(err)
+      })
     })
   }
 }
 
-const server = new Server()
-server.start()
+const service = new Service()
+service.start()
