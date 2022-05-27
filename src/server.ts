@@ -4,7 +4,7 @@ import helmet from 'helmet'
 import mongoose from 'mongoose'
 import compression from 'compression'
 import cors from 'cors'
-import { Server/* , Socket */ } from 'socket.io'
+import Server from 'socket.io'
 
 import indexRoutes from './routes/indexRoutes'
 import usersRoutes from './routes/usersRoutes'

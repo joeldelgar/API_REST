@@ -40,7 +40,7 @@ class AuthRoutes {
     await newUser.save()
 
     const userFound = await User.findOne({ username })
-    const token = jwt.sign({ id: userFound._id }, _SECRET, {
+    const token = jwt.sign({ id: userFound._id, username: userFound.username }, _SECRET, {
       expiresIn: 3600
     })
     res.status(200).json({ token })
@@ -55,7 +55,7 @@ class AuthRoutes {
     const matchPassword = await bcrypt.compare(password, userFound.password)
     if (!matchPassword) return res.status(401).json({ message: 'Invalid password' })
 
-    const token = jwt.sign({ id: userFound._id }, _SECRET, {
+    const token = jwt.sign({ id: userFound._id, username: userFound.username }, _SECRET, {
       expiresIn: 3600
     })
 
