@@ -10,6 +10,8 @@ const UserSchema = new Schema({
   languages: [{ type: String }],
   location: [{ type: String }],
   photo: { type: String },
+  peopleliked: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  peopledisliked: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   personalRatings: [{ type: Schema.Types.ObjectId, ref: 'Rating' }],
   activitiesOrganized: [{ type: Schema.Types.ObjectId, ref: 'Activities' }],
   activities: [{ type: Schema.Types.ObjectId, ref: 'Activities' }],
