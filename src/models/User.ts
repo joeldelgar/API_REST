@@ -8,7 +8,12 @@ const UserSchema = new Schema({
   phone: { type: String },
   mail: { type: String },
   languages: [{ type: String }],
-  location: [{ type: String }],
+  location: {
+    type: {
+      type: String
+    },
+    coordinates: []
+  },
   photo: { type: String },
   personalRatings: [{ type: Schema.Types.ObjectId, ref: 'Rating' }],
   activitiesOrganized: [{ type: Schema.Types.ObjectId, ref: 'Activities' }],
@@ -18,5 +23,7 @@ const UserSchema = new Schema({
   creationDate: { type: Date, default: Date.now },
   active: { type: Boolean, required: true }
 })
+
+UserSchema.index({ location: '2dsphere' })
 
 export default model('User', UserSchema)
