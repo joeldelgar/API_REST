@@ -16,7 +16,8 @@ const UserSchema = new Schema({
   messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
   roles: { type: Schema.Types.ObjectId, ref: 'Role' },
   creationDate: { type: Date, default: Date.now },
-  active: { type: Boolean, required: true }
+  active: { type: Boolean, required: true },
+  fromGoogle: { type: Boolean, required: true}
 })
 
 export default model('User', UserSchema)
