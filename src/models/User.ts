@@ -1,5 +1,16 @@
 import { Schema, model } from 'mongoose'
 
+const pointSchema = new Schema({
+  type: {
+    type: String,
+    default: 'Point'
+  },
+  coordinates: {
+    type: [Number],
+    required: true
+  }
+})
+
 const UserSchema = new Schema({
   name: { type: String, required: true },
   surname: { type: String, required: true },
@@ -8,7 +19,10 @@ const UserSchema = new Schema({
   phone: { type: String },
   mail: { type: String },
   languages: [{ type: String }],
-  location: [{ type: String }],
+  location: {
+    type: pointSchema,
+    index: '2dshpere'
+  },
   photo: { type: String },
   personalRatings: [{ type: Schema.Types.ObjectId, ref: 'Rating' }],
   activitiesOrganized: [{ type: Schema.Types.ObjectId, ref: 'Activities' }],

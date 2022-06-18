@@ -83,6 +83,30 @@ class UserRoutes {
     }
   }
 
+  public async getUsersByDistance (req: Request, res: Response) : Promise<void> {
+    const userFound = await User.findById(req.params.userID)
+    console.log(userFound)
+    const distance = req.params.maxDistance
+    console.log(distance)
+    console.log(userFound.location.coordinates[0])
+    const usersDistance = await User.find({
+      location:
+        {
+          $near:
+            {
+              $geometry: { type: 'Point', coordinates: [userFound.location.coordinates[0], userFound.location.coordinates[1]] },
+              $minDistance: 0,
+              $maxDistance: distance
+            }
+        }
+    })
+    if (usersDistance.length === 0) {
+      res.status(404).send('No users near you')
+    } else {
+      res.status(200).send(usersDistance)
+    }
+  }
+
   routes () {
     this.router.get('/', this.getUsers)
     this.router.get('/:nameUser', this.getUserByName)
@@ -91,6 +115,7 @@ class UserRoutes {
     this.router.put('/:nameUser', [verifyToken, isOwner], this.updateUser)
     this.router.delete('/:nameUser', [verifyToken, isOwner], this.disableUser)
     this.router.delete('/forget/:nameUser', [verifyToken, isOwner], this.deleteUser)
+    this.router.get('/:userID/distance/:maxDistance', this.getUsersByDistance)
   }
 }
 const userRoutes = new UserRoutes()
