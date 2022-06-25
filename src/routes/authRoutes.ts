@@ -34,7 +34,7 @@ class AuthRoutes {
     const { name, surname, username, password, phone, mail, languages, photo, role } = req.body
     const salt = await bcrypt.genSalt(10)
     const hashed = await bcrypt.hash(password, salt)
-    const location = { type: 'Point', coordinates: req.body.location, index: '2dsphere' }
+    const location = { type: 'Point', coordinates: [req.body.location.coordinates[0], req.body.location.coordinates[1]], index: '2dsphere' }
     const newUser = new User({ name, surname, username, password: hashed, phone, mail, languages, location, photo, active: true, fromGoogle: true })
     const roleadded = await Role.findOne({ role })
     newUser.roles = roleadded._id
