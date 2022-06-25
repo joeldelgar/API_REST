@@ -30,7 +30,7 @@ class AuthRoutes {
     res.status(200).send('Role added!')
   }
 
-  public async registerGoogle(req: Request, res: Response){
+  public async registerGoogle (req: Request, res: Response) {
     const { name, surname, username, password, phone, mail, languages, location, photo, role } = req.body
     const salt = await bcrypt.genSalt(10)
     const hashed = await bcrypt.hash(password, salt)
@@ -44,8 +44,8 @@ class AuthRoutes {
       expiresIn: 3600
     })
     res.status(200).json({ token })
-
   }
+
   public async register (req: Request, res: Response) {
     const { name, surname, username, password, phone, mail, languages, location, photo, role } = req.body
     const salt = await bcrypt.genSalt(10)
