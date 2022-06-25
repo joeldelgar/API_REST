@@ -47,10 +47,14 @@ class AuthRoutes {
   }
 
   public async register (req: Request, res: Response) {
-    const { name, surname, username, password, phone, mail, languages, location, photo, role } = req.body
+    const { name, surname, username, password, phone, mail, languages, photo, role } = req.body
     const salt = await bcrypt.genSalt(10)
     const hashed = await bcrypt.hash(password, salt)
+    console.log('1')
+    const location = { type: 'Point', coordinates: [req.body.location.coordinates[0], req.body.location.coordinates[1]], index: '2dsphere' }
+    console.log('2')
     const newUser = new User({ name, surname, username, password: hashed, phone, mail, languages, location, photo, active: true, fromGoogle: false })
+    console.log('3')
     const roleadded = await Role.findOne({ role })
     newUser.roles = roleadded._id
     await newUser.save()
