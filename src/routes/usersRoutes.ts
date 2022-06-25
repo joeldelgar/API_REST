@@ -14,7 +14,7 @@ class UserRoutes {
   }
 
   public async getUsers (req: Request, res: Response) : Promise<void> { // It returns a void, but internally it's a promise.
-    const allUsers = await User.find().populate('personalRatings', 'rating -_id description').populate('messages').populate('roles', '-_id name')
+    const allUsers = await User.find().populate('personalRatings', 'rating -_id description').populate('messages').populate('roles', '-_id name').populate('peopleliked', 'name').populate('peopledisliked', 'name')
     const activeUsers = allUsers.filter(user => user.active === true)
     if (activeUsers.length === 0) {
       res.status(404).send('There are no users yet!')
@@ -65,6 +65,20 @@ class UserRoutes {
     }
   }
 
+  public async updateUserByID (req: Request, res: Response) : Promise<void> {
+    console.log('Trying to find the user by id ' + req.params.userID)
+    // const userToUpdate = await User.findOneAndUpdate({ id: req.params.userID }, req.body)
+    const userToUpdate = await User.findOneAndUpdate({ _id: req.params.userID }, req.body)
+    console.log(userToUpdate)
+    console.log('The user has been found')
+    // const userToUpdatePass = await User.findOneAndUpdate({ _id: req.params.userID }) // Temp fix
+    // if ((userToUpdate && userToUpdatePass) == null) {
+    res.status(404).send('The user does not exist!')
+    // } else {
+    //   res.status(200).send('Updated!')
+    // }
+  }
+
   public async deleteUser (req: Request, res: Response) : Promise<void> {
     const userToDelete = await User.findOneAndDelete({ name: req.params.nameUser }, req.body)
     if (userToDelete == null) {
@@ -112,6 +126,7 @@ class UserRoutes {
     this.router.get('/:nameUser', this.getUserByName)
     this.router.get('/byID/:userID', this.getUserByID)
     this.router.post('/', this.addUser)
+    this.router.put('/byID/:userID', [verifyToken], this.updateUserByID)
     this.router.put('/:nameUser', [verifyToken, isOwner], this.updateUser)
     this.router.delete('/:nameUser', [verifyToken, isOwner], this.disableUser)
     this.router.delete('/forget/:nameUser', [verifyToken, isOwner], this.deleteUser)
