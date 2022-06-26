@@ -110,13 +110,20 @@ class ActivityRoutes {
 
       if (user._id.toString() === userJoining._id.toString())
         { 
-        joinedOrOrganizer=true}
-      else if (user._id.toString() == activity.organizer._id.toString())
+        joinedOrOrganizer=true
+
+      }
+      else if (userJoining._id.toString() === activity.organizer._id.toString())
         { 
-        joinedOrOrganizer=true}
+        joinedOrOrganizer=true
+
+      }
     }) 
+    console.log(joinedOrOrganizer);
     
-    if (userJoining === null || userJoining.active === false) {
+    
+    if (userJoining === null ){
+      //|| userJoining.active === false) {
       res.status(404).send('User not found')
       return;
     } 
