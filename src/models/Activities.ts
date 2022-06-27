@@ -23,6 +23,7 @@ const ActivitySchema = new Schema({
   },
   ratings: [{ type: Schema.Types.ObjectId, cref: 'Rating' }],
   messages: [{ type: Schema.Types.ObjectId, cref: 'Message' }],
+  accessibility: { type: Boolean },
   date: { type: Date, unique: false }
 
 })

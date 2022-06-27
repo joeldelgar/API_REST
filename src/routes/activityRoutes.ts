@@ -53,9 +53,9 @@ class ActivityRoutes {
 
   public async addActivity (req: Request, res: Response) : Promise<void> {
     console.log(req.body)
-    const { name, description, organizer, language, date } = req.body
+    const { name, description, organizer, language, date, accessibility } = req.body
     const location = { type: 'Point', coordinates: [req.body.location.coordinates[0], req.body.location.coordinates[1]], index: '2dsphere' }
-    const newActivity = new Activity({ name, description, language, organizer, location, date })
+    const newActivity = new Activity({ name, description, language, organizer, location, date, accessibility })
 
     const allActivities = await Activity.find()
     allActivities.forEach(function (act) {
