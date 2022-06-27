@@ -12,19 +12,39 @@ class ActivityRoutes {
   }
 
   public async getActivities (req: Request, res: Response) : Promise<void> { // It returns a void, but internally it's a promise.
-    const allActivities = await Activity.find().populate({ path: 'users', match: { active: true }, select: 'name -_id' }).populate('ratings', 'rating description -_id').populate('organizer').populate('messages')
-    const activitiesOrganizerActive = allActivities.filter(activity => activity.organizer.active === true)
-
-    if (activitiesOrganizerActive.length === 0) {
+    const allActivities = await Activity.find().populate('ratings', 'rating description -_id').populate('organizer', 'username').populate('messages').populate('users', 'username').populate('date')
+    // const activitiesOrganizerActive = allActivities.filter(activity => activity.organizer.active === true)
+    // console.log(allActivities[1].organizer.name);
+    if (allActivities.length === 0) {
       res.status(404).send('There are no activities created!')
     } else {
-      res.status(200).send(activitiesOrganizerActive)
+      res.status(200).send(allActivities)
+    }
+  }
+
+  public async getActivitiesByDate (req: Request, res: Response) : Promise<void> { // It returns a void, but internally it's a promise.
+    const allActivities = await Activity.find({ date: { $lt: Date.now() } }).populate('organizer', 'username').populate('messages').populate('users', 'username').populate('date')
+    console.log('data')
+    if (allActivities == null) {
+      res.status(404).send('There are no past activities.')
+    } else {
+      res.status(200).send(allActivities)
+    }
+  }
+
+  public async getActivitiesByOrganizer (req: Request, res: Response) : Promise<void> { // It returns a void, but internally it's a promise.
+    const activitiesOrganized = await Activity.find({ organizer: req.params.idOrganizer }).populate('organizer').populate('users', 'username')
+    if (activitiesOrganized == null) {
+      res.status(404).send("The activity doesn't exist!")
+    } else {
+      res.status(200).send(activitiesOrganized)
     }
   }
 
   public async getActivityByName (req: Request, res: Response) : Promise<void> {
-    const activityFound = await Activity.findOne({ name: req.params.nameActivity }).populate({ path: 'users', match: { active: true }, select: 'name -_id' }).populate('ratings', 'rating description -_id').populate('organizer').populate('messages')
-    if (activityFound == null || activityFound.organizer.active === false) {
+    const activityFound = await Activity.findOne({ name: req.params.nameActivity }).populate('users', 'username').populate('ratings', 'rating description -_id').populate('organizer').populate('messages').populate('date')
+    if (activityFound == null) {
+      // || activityFound.organizer.active === false) {
       res.status(404).send("The activity doesn't exist!")
     } else {
       res.status(200).send(activityFound)
@@ -33,19 +53,27 @@ class ActivityRoutes {
 
   public async addActivity (req: Request, res: Response) : Promise<void> {
     console.log(req.body)
-    const { name, description, organizer, language } = req.body
+    const { name, description, organizer, language, date } = req.body
     const location = { type: 'Point', coordinates: [req.body.location.coordinates[0], req.body.location.coordinates[1]], index: '2dsphere' }
-    const newActivity = new Activity({ name, description, language, organizer, location })
-    await newActivity.save()
+    const newActivity = new Activity({ name, description, language, organizer, location, date })
+
+    const allActivities = await Activity.find()
+    allActivities.forEach(function (act) {
+      if (act.name === newActivity.name) {
+        console.log('Activity name taken ' + act.name)
+        res.status(400).send('This activity name is already in use.')
+      }
+    })
 
     const user = await User.findById(organizer)
-    console.log(user)
-    if (user.active === false) {
-      res.status(404).send('Organizer not found')
-    } else {
-      user.activitiesOrganized.push(newActivity)
-      // const userToUpdate = await User.findOneAndUpdate({ name: user.name }, { activitiesOrganized: user.activitiesOrganized })
-    }
+    // if (user.active === false) {
+    //  res.status(404).send('Organizer not found')
+    // } else {
+    newActivity.users.push(user)
+    newActivity.save()
+    user.activitiesOrganized.push(newActivity)
+    user.save()
+    // }
 
     res.status(200).send('Activity added!')
   }
@@ -80,34 +108,47 @@ class ActivityRoutes {
 
   public async updateActivity (req: Request, res: Response) : Promise<void> {
     console.log(req.body)
-    const activityToUpdate = await Activity.findOneAndUpdate({ name: req.params.nameActivity }, req.body)
+
+    const activityToUpdate = await Activity.findByIdAndUpdate(req.params.idActivity, req.body)
+
     if (activityToUpdate == null) {
       res.status(404).send("The activity doesn't exist!")
     } else {
-      const organizer = await User.findById(activityToUpdate.organizer)
-      if (organizer.active === false) {
-        res.status(404).send('Organizer not found')
-      } else {
-        res.status(200).send('Updated!')
-      }
+      // const organizer = await User.findById(activityToUpdate.organizer)
+      // if (organizer.active === false) {
+      //  res.status(404).send('Organizer not found')
+      // } else {
+      res.status(200).send('Updated!')
     }
   }
 
   public async addUserActivity (req: Request, res: Response) : Promise <void> {
-    const { idActivity, idUser } = req.body
+    // const { idActivity, idUser } = req.body
+    const userJoining = await User.findOne({ _id: req.body.idUser })
+    const activity = await Activity.findOne({ _id: req.body.idActivity })
 
-    const user = await User.findById(idUser)
-    console.log(user)
-    if (user == null || user.active === false) {
+    let joinedOrOrganizer = Boolean(false)
+
+    activity.users.forEach(function (user: any) {
+      if (user._id.toString() === userJoining._id.toString()) {
+        joinedOrOrganizer = true
+      } else if (userJoining._id.toString() === activity.organizer._id.toString()) {
+        joinedOrOrganizer = true
+      }
+    })
+    console.log(joinedOrOrganizer)
+    if (userJoining === null) {
+      // || userJoining.active === false) {
       res.status(404).send('User not found')
+    } else if (activity === null) {
+      res.status(404).send('Activity not found')
+    } else if (joinedOrOrganizer === true) {
+      res.status(400).send('Already joined')
     } else {
-      user.activities.push(idActivity)
-      // const userToUpdate = await User.findOneAndUpdate({ _id: idUser }, { activities: user.activities })
-
-      const activity = await Activity.findById(idActivity)
-      activity.users.push(idUser)
-      // const activityToUpdate = await Activity.findOneAndUpdate({ _id: idActivity }, { users: activity.users })
-
+      userJoining.activities.push(activity)
+      activity.users.push(userJoining)
+      userJoining.save()
+      activity.save()
       res.status(200).send('User Added to Activity')
     }
   }
@@ -117,6 +158,14 @@ class ActivityRoutes {
     if (activityToDelete == null) {
       res.status(404).send("The activity doesn't exist!")
     } else {
+      const organizer = await User.findOne({ id: req.body.organizer })
+      organizer.activitiesOrganized.pull({ id: activityToDelete.id })
+      organizer.save()
+      activityToDelete.users.forEach(function (user) {
+        user.activities.pull({ id: activityToDelete.id })
+        user.save()
+      })
+
       res.status(200).send('Deleted!')
     }
   }
@@ -124,9 +173,11 @@ class ActivityRoutes {
   routes () {
     this.router.get('/', this.getActivities)
     this.router.get('/:nameActivity', this.getActivityByName)
+    this.router.get('/byOrganizer/:idOrganizer', this.getActivitiesByOrganizer)
+    this.router.get('/filter/byDate', this.getActivitiesByDate)
     this.router.post('/', [verifyToken, isOwner], this.addActivity)
-    this.router.put('/:nameActivity', [verifyToken, isOwner], this.updateActivity)
-    this.router.post('/adduseractivity', [verifyToken, isOwner], this.addUserActivity)
+    this.router.put('/:idActivity', [verifyToken, isOwner], this.updateActivity)
+    this.router.post('/adduseractivity', this.addUserActivity)
     this.router.delete('/:nameActivity', [verifyToken, isOwner], this.deleteActivity)
     this.router.get('/:userID/distance/:maxDistance', this.getActivitiesByDistance)
   }

@@ -1,3 +1,5 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable quote-props */
 import express from 'express'
 import morgan from 'morgan'
 import helmet from 'helmet'
@@ -12,6 +14,7 @@ import ratingRoutes from './routes/ratingRoutes'
 import activityRoutes from './routes/activityRoutes'
 import messageRoutes from './routes/messageRoutes'
 import authRoutes from './routes/authRoutes'
+import Chat from './models/Chat'
 
 class Service {
   public app: express.Application
@@ -56,19 +59,51 @@ class Service {
     })
 
     const io = new Server(httpServer)
+    const connectedUsers:any[] = []
 
     io.on('connection', function (client: any) {
       console.log('Connected...', client.id)
 
-      // listens for new messages coming in
-      client.on('message', function name (data: any) {
-        console.log(data)
-        io.emit('message', data)
-      })
+      client.on('chatID', function (data: any) {
+        const chatID = data.id
 
-      // listens when a user is disconnected from the server
-      client.on('disconnect', function () {
-        console.log('Disconnected...', client.id)
+        client.join(chatID)
+        connectedUsers.push(chatID)
+
+        client.broadcast.emit('onlineUsers', { 'users': connectedUsers })
+
+        // listens when a user is disconnected from the server
+        client.on('disconnect', function () {
+          // Remove ConnectedUsers
+          const index = connectedUsers.indexOf(chatID)
+          if (index > -1) { connectedUsers.splice(index, 1) }
+
+          // Leave From Room
+          client.leave(chatID)
+          client.broadcast.emit('onlineUsers', { 'users': connectedUsers })
+          console.log('Disconnected...', client.id)
+        })
+
+        // listens for new broadcast messages coming in
+        client.on('message', function name (data: any) {
+          console.log(data)
+          io.emit('message', data)
+        })
+
+        client.on('send_message', function (message: any) {
+          const receiverChatID = message.receiverChatID
+          const senderChatID = message.senderChatID
+          const content = message.content
+
+          saveChat(content, senderChatID, receiverChatID, true)
+
+          client.in(receiverChatID).emit('receive_message', {
+            'content': content,
+            'senderChatID': senderChatID,
+            'receiverChatID': receiverChatID
+          })
+          saveChat(content, receiverChatID, senderChatID, false)
+        })
       })
 
       // listens when there's an error detected and logs the error on the console
@@ -78,6 +113,38 @@ class Service {
       })
     })
   }
+}
+
+function saveChat (content: any, sender: any, receiver: any, isMy: boolean) {
+  const chat = new Chat({
+    _id: sender,
+    users: [{
+      _id: receiver,
+      messages: {
+        ismy: isMy,
+        message: content
+      }
+    }
+    ]
+  })
+
+  Chat.findOne({ _id: sender }, (_err: any, doc: any) => {
+    if (!doc) {
+      chat.save()
+    } else {
+      const receiverIndex = doc.users.findIndex((element: any) => element._id === receiver)
+      if (receiverIndex !== undefined && receiverIndex !== -1) {
+        doc.users[receiverIndex].messages.push({ ismy: isMy, message: content })
+        doc.save()
+      } else {
+        doc.users.push({ _id: receiver, messages: { ismy: isMy, message: content } })
+        doc.save()
+      }
+    }
+    console.log('saveChat OK, isMy: ' + isMy)
+  }).catch((err) => {
+    console.log('Error saveChat (isMy: ' + isMy + '): ' + err.chat)
+  })
 }
 
 const service = new Service()

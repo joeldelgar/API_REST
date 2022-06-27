@@ -22,7 +22,8 @@ const ActivitySchema = new Schema({
     index: '2dshpere'
   },
   ratings: [{ type: Schema.Types.ObjectId, cref: 'Rating' }],
-  messages: [{ type: Schema.Types.ObjectId, cref: 'Message' }]
+  messages: [{ type: Schema.Types.ObjectId, cref: 'Message' }],
+  date: { type: Date, unique: false }
 
 })
 

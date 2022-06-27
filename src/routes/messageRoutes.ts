@@ -4,6 +4,7 @@ import { isOwner, verifyToken } from '../middlewares/authJWT'
 import Message from '../models/Message'
 import User from '../models/User'
 import Activity from '../models/Activities'
+import Chat from '../models/Chat'
 
 class MessageRoutes {
   public router: Router
@@ -177,6 +178,26 @@ class MessageRoutes {
     res.status(200).send('Message added!')
   }
 
+  public async fetchChat (req: Request, res: Response) : Promise<void> {
+    const senderID = req.body.sender
+    const receiverID = req.body.receiver
+
+    Chat.find({ _id: senderID }, { users: { $elemMatch: { _id: receiverID } } }).then((document) => {
+      if (document.length > 0) {
+        if (document[0].users.length > 0) {
+          const messages = document[0].users[0].messages
+          res.send(messages.slice(Math.max(messages.length - 15, 0)))
+        } else {
+          res.send([])
+        }
+      } else {
+        res.send([])
+      }
+    }).catch((err) => {
+      console.log('Error fetchChat: ' + err)
+    })
+  }
+
   public async deleteMessage (req: Request, res: Response) : Promise<void> {
     const messageToDelete = await Message.findByIdAndRemove(req.params.messageId)
 
@@ -199,6 +220,7 @@ class MessageRoutes {
     this.router.post('/userName', this.addMessageUserByName)
     this.router.post('/activity', this.addMessageActivity)
     this.router.post('/activityName', this.addMessageActivityByName)
+    this.router.post('/fetchChat', this.fetchChat)
     this.router.delete('/:messageId', [verifyToken, isOwner], this.deleteMessage)
   }
 }
