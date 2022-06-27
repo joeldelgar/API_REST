@@ -33,7 +33,8 @@ class ActivityRoutes {
 
   public async addActivity (req: Request, res: Response) : Promise<void> {
     console.log(req.body)
-    const { name, description, organizer, language, location } = req.body
+    const { name, description, organizer, language } = req.body
+    const location = { type: 'Point', coordinates: [req.body.location.coordinates[0], req.body.location.coordinates[1]], index: '2dsphere' }
     const newActivity = new Activity({ name, description, language, organizer, location })
     await newActivity.save()
 
@@ -47,6 +48,34 @@ class ActivityRoutes {
     }
 
     res.status(200).send('Activity added!')
+  }
+
+  public async getActivitiesByDistance (req: Request, res: Response) : Promise<void> {
+    const userFound = await User.findById(req.params.userID).populate('personalRatings', 'rating -_id description').populate('messages').populate('roles', '-_id name').populate('peopleliked', 'name').populate('peopledisliked', 'name')
+    const distance = req.params.maxDistance
+    const activities = await Activity.find({
+      location:
+        {
+          $near:
+            {
+              $geometry: { type: 'Point', coordinates: [userFound.location.coordinates[0], userFound.location.coordinates[1]] },
+              $minDistance: 0,
+              $maxDistance: distance
+            }
+        }
+    }).populate({ path: 'users', match: { active: true }, select: 'name -_id' }).populate('ratings', 'rating description -_id').populate('organizer').populate('messages')
+    if (activities.length === 0) {
+      res.status(404).send('No activities near you')
+    } else {
+      const difActivities = activities.filter(activity => activity.organizer.name !== userFound.name)
+      console.log(difActivities)
+      const activitiesOrganizerActive = difActivities.filter(activity => activity.organizer.active === true)
+      if (activitiesOrganizerActive.length === 0) {
+        res.status(404).send('No activities near you')
+      } else {
+        res.status(200).send(difActivities)
+      }
+    }
   }
 
   public async updateActivity (req: Request, res: Response) : Promise<void> {
@@ -99,6 +128,7 @@ class ActivityRoutes {
     this.router.put('/:nameActivity', [verifyToken, isOwner], this.updateActivity)
     this.router.post('/adduseractivity', [verifyToken, isOwner], this.addUserActivity)
     this.router.delete('/:nameActivity', [verifyToken, isOwner], this.deleteActivity)
+    this.router.get('/:userID/distance/:maxDistance', this.getActivitiesByDistance)
   }
 }
 
