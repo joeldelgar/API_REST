@@ -23,6 +23,25 @@ class UserRoutes {
     }
   }
 
+  public async getPeopleLikedByID (req: Request, res: Response) : Promise<void> {
+    const userFound = await User.findById(req.params.userID).populate('personalRatings', 'rating -_id description').populate('messages').populate('roles', '-_id name').populate('peopleliked', 'name').populate('peopledisliked', 'name')
+    const likedUsers : string[] = []
+    userFound.peopleliked.forEach(people => likedUsers.push(people.id))
+    if (userFound == null || userFound.active === false) {
+      res.status(404).send("The user doesn't exist!")
+    } else {
+      const allUsers = await User.find().populate('personalRatings', 'rating -_id description').populate('messages').populate('roles', '-_id name').populate('peopleliked', 'name').populate('peopledisliked', 'name')
+      /* const activeUsers = allUsers.filter(user => (userFound.peopleliked.forEach(people => people.id)) === user.id) */
+      const activeUsers = allUsers.filter(user => likedUsers.includes(user.id))
+
+      if (activeUsers.length === 0) {
+        res.status(404).send('There are no users yet!')
+      } else {
+        res.status(200).send(activeUsers)
+      }
+    }
+  }
+
   public async getUserByName (req: Request, res: Response) : Promise<void> {
     const userFound = await User.findOne({ name: req.params.nameUser }).populate('messages')
     if (userFound == null || userFound.active === false) {
@@ -123,6 +142,7 @@ class UserRoutes {
 
   routes () {
     this.router.get('/', this.getUsers)
+    this.router.get('/peopleLiked/:userID', this.getPeopleLikedByID)
     this.router.get('/:nameUser', this.getUserByName)
     this.router.get('/byID/:userID', this.getUserByID)
     this.router.post('/', this.addUser)

@@ -13,8 +13,8 @@ class ActivityRoutes {
 
   public async getActivities (req: Request, res: Response) : Promise<void> { // It returns a void, but internally it's a promise.
     const allActivities = await Activity.find().populate('ratings', 'rating description -_id').populate('organizer', 'username').populate('messages').populate('users', 'username').populate('date')
-    //const activitiesOrganizerActive = allActivities.filter(activity => activity.organizer.active === true)
-   //console.log(allActivities[1].organizer.name);
+    // const activitiesOrganizerActive = allActivities.filter(activity => activity.organizer.active === true)
+    // console.log(allActivities[1].organizer.name);
     if (allActivities.length === 0) {
       res.status(404).send('There are no activities created!')
     } else {
@@ -23,20 +23,17 @@ class ActivityRoutes {
   }
 
   public async getActivitiesByDate (req: Request, res: Response) : Promise<void> { // It returns a void, but internally it's a promise.
-    const allActivities = await Activity.find({date: {$lt: Date.now()}}).populate('organizer', 'username').populate('messages').populate('users', 'username').populate('date')
-    console.log('data');
+    const allActivities = await Activity.find({ date: { $lt: Date.now() } }).populate('organizer', 'username').populate('messages').populate('users', 'username').populate('date')
+    console.log('data')
     if (allActivities == null) {
-      res.status(404).send("There are no past activities.")
-      return;
+      res.status(404).send('There are no past activities.')
     } else {
       res.status(200).send(allActivities)
     }
-
   }
 
   public async getActivitiesByOrganizer (req: Request, res: Response) : Promise<void> { // It returns a void, but internally it's a promise.
     const activitiesOrganized = await Activity.find({ organizer: req.params.idOrganizer }).populate('organizer').populate('users', 'username')
-
     if (activitiesOrganized == null) {
       res.status(404).send("The activity doesn't exist!")
     } else {
@@ -46,8 +43,8 @@ class ActivityRoutes {
 
   public async getActivityByName (req: Request, res: Response) : Promise<void> {
     const activityFound = await Activity.findOne({ name: req.params.nameActivity }).populate('users', 'username').populate('ratings', 'rating description -_id').populate('organizer').populate('messages').populate('date')
-    if (activityFound == null){
-     // || activityFound.organizer.active === false) {
+    if (activityFound == null) {
+      // || activityFound.organizer.active === false) {
       res.status(404).send("The activity doesn't exist!")
     } else {
       res.status(200).send(activityFound)
@@ -60,24 +57,22 @@ class ActivityRoutes {
     const newActivity = new Activity({ name, description, language, organizer, location, date })
 
     const allActivities = await Activity.find()
-    allActivities.forEach(function (act) { 
-      if (act.name == newActivity.name){
+    allActivities.forEach(function (act) {
+      if (act.name === newActivity.name) {
         console.log('Activity name taken ' + act.name)
         res.status(400).send('This activity name is already in use.')
-         
-      }}) 
+      }
+    })
 
     const user = await User.findById(organizer)
-    
-    //if (user.active === false) {
+    // if (user.active === false) {
     //  res.status(404).send('Organizer not found')
-    //} else {
-      newActivity.users.push(user)
-      newActivity.save()
-      user.activitiesOrganized.push(newActivity)
-      user.save()
-      
-    //}
+    // } else {
+    newActivity.users.push(user)
+    newActivity.save()
+    user.activitiesOrganized.push(newActivity)
+    user.save()
+    // }
 
     res.status(200).send('Activity added!')
   }
@@ -90,61 +85,43 @@ class ActivityRoutes {
     if (activityToUpdate == null) {
       res.status(404).send("The activity doesn't exist!")
     } else {
-      const organizer = await User.findById(activityToUpdate.organizer)
-      //if (organizer.active === false) {
+      // const organizer = await User.findById(activityToUpdate.organizer)
+      // if (organizer.active === false) {
       //  res.status(404).send('Organizer not found')
-      //} else {
-        res.status(200).send('Updated!')
-      }
-    
+      // } else {
+      res.status(200).send('Updated!')
+    }
   }
 
   public async addUserActivity (req: Request, res: Response) : Promise <void> {
-    const { idActivity, idUser } = req.body
-    const userJoining = await User.findOne({_id: req.body.idUser})
-    const activity = await Activity.findOne({_id: req.body.idActivity})
+    // const { idActivity, idUser } = req.body
+    const userJoining = await User.findOne({ _id: req.body.idUser })
+    const activity = await Activity.findOne({ _id: req.body.idActivity })
 
-    var joinedOrOrganizer = Boolean (false)
+    let joinedOrOrganizer = Boolean(false)
 
-    activity.users.forEach(function (user) { 
-
-      if (user._id.toString() === userJoining._id.toString())
-        { 
-        joinedOrOrganizer=true
-
+    activity.users.forEach(function (user: any) {
+      if (user._id.toString() === userJoining._id.toString()) {
+        joinedOrOrganizer = true
+      } else if (userJoining._id.toString() === activity.organizer._id.toString()) {
+        joinedOrOrganizer = true
       }
-      else if (userJoining._id.toString() === activity.organizer._id.toString())
-        { 
-        joinedOrOrganizer=true
-
-      }
-    }) 
-    console.log(joinedOrOrganizer);
-    
-    
-    if (userJoining === null ){
-      //|| userJoining.active === false) {
+    })
+    console.log(joinedOrOrganizer)
+    if (userJoining === null) {
+      // || userJoining.active === false) {
       res.status(404).send('User not found')
-      return;
-    } 
-    else if (activity === null){
+    } else if (activity === null) {
       res.status(404).send('Activity not found')
-      return;
-
-    } else if (joinedOrOrganizer==true) {
-
+    } else if (joinedOrOrganizer === true) {
       res.status(400).send('Already joined')
-      return;
-     
-  } else {
+    } else {
       userJoining.activities.push(activity)
       activity.users.push(userJoining)
       userJoining.save()
       activity.save()
       res.status(200).send('User Added to Activity')
     }
-
-
   }
 
   public async deleteActivity (req: Request, res: Response) : Promise<void> {
@@ -152,13 +129,13 @@ class ActivityRoutes {
     if (activityToDelete == null) {
       res.status(404).send("The activity doesn't exist!")
     } else {
-      const organizer = await User.findOne({id: req.body.organizer})
-      organizer.activitiesOrganized.pull({id: activityToDelete.id})
+      const organizer = await User.findOne({ id: req.body.organizer })
+      organizer.activitiesOrganized.pull({ id: activityToDelete.id })
       organizer.save()
-      activityToDelete.users.forEach(function (user) { 
-       user.activities.pull({id: activityToDelete.id})
-       user.save()
-      }) 
+      activityToDelete.users.forEach(function (user) {
+        user.activities.pull({ id: activityToDelete.id })
+        user.save()
+      })
 
       res.status(200).send('Deleted!')
     }
@@ -173,7 +150,6 @@ class ActivityRoutes {
     this.router.put('/:idActivity', [verifyToken, isOwner], this.updateActivity)
     this.router.post('/adduseractivity', this.addUserActivity)
     this.router.delete('/:nameActivity', [verifyToken, isOwner], this.deleteActivity)
-
   }
 }
 

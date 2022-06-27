@@ -9,7 +9,7 @@ const ActivitySchema = new Schema({
   location: [{ type: String, unique: false }],
   ratings: [{ type: Schema.Types.ObjectId, cref: 'Rating' }],
   messages: [{ type: Schema.Types.ObjectId, cref: 'Message' }],
-  date: { type: Date, unique: false },
+  date: { type: Date, unique: false }
 
 })
 
